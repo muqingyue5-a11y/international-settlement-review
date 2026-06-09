@@ -484,13 +484,37 @@ nav.forEach(btn=>btn.addEventListener('click',()=>{
 }));
 
 const knowledgeStorePrefix='intlSettlementKnowledge:v1:';
+const supabaseUrl='https://eytgjgajktedzetcwcuw.supabase.co';
+const supabaseAnonKey='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGdqZ2Fqa3RlZHpldGN3Y3V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NzgzMjgsImV4cCI6MjA5NjU1NDMyOH0.OglhO3l8Sz0FwGU5FG4qVp9OzZ_DrJzPAO77TmCTk1o';
 const siteAccount='gjjs';
 const sitePassword='gjjs2026';
 const siteSessionKey='intlSettlementSiteUnlocked';
 let siteUnlocked=sessionStorage.getItem(siteSessionKey)==='1';
+let cloudLoadStarted=false;
 function setKnowledgeStatus(text){
   const status=document.querySelector('#knowledgeStatus');
   if(status) status.textContent=text;
+}
+function supabaseHeaders(extra={}){
+  return {
+    apikey:supabaseAnonKey,
+    Authorization:`Bearer ${supabaseAnonKey}`,
+    'Content-Type':'application/json',
+    ...extra
+  };
+}
+async function supabaseRequest(path, options={}){
+  const response=await fetch(`${supabaseUrl}/rest/v1/${path}`,{
+    ...options,
+    headers:supabaseHeaders(options.headers || {})
+  });
+  if(!response.ok){
+    const message=await response.text();
+    throw new Error(message || `Supabase request failed: ${response.status}`);
+  }
+  if(response.status===204) return null;
+  const text=await response.text();
+  return text ? JSON.parse(text) : null;
 }
 function setKnowledgeEditMode(unlocked){
   document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
@@ -502,7 +526,7 @@ function setKnowledgeEditMode(unlocked){
   });
   setKnowledgeStatus(unlocked?'可单独修改每条知识点':'请先登录网页');
 }
-function setSiteAccess(unlocked){
+async function setSiteAccess(unlocked){
   siteUnlocked=unlocked;
   sessionStorage.setItem(siteSessionKey,unlocked?'1':'0');
   const login=document.querySelector('#siteLogin');
@@ -515,6 +539,11 @@ function setSiteAccess(unlocked){
     const password=document.querySelector('#sitePassword');
     if(user) user.focus();
     if(password) password.value='';
+    return;
+  }
+  if(!cloudLoadStarted){
+    cloudLoadStarted=true;
+    await loadCloudKnowledge();
   }
 }
 function requireKnowledgeEdit(){
@@ -527,6 +556,67 @@ function knowledgeKey(row, index){
   const cells=row.querySelectorAll('td');
   const topic=cells[1]?.textContent?.trim() || `row-${index}`;
   return knowledgeStorePrefix + chapter + ':' + topic;
+}
+function knowledgePayload(cell){
+  const row=cell.closest('tr');
+  const cells=row.querySelectorAll('td');
+  return {
+    id:cell.dataset.key,
+    chapter:row.closest('table')?.previousElementSibling?.textContent?.trim() || 'chapter',
+    topic:cells[1]?.textContent?.trim() || '',
+    content:cell.innerHTML,
+    updated_at:new Date().toISOString(),
+    updated_by:siteAccount
+  };
+}
+async function upsertKnowledgeItems(items){
+  await supabaseRequest('knowledge_items?on_conflict=id',{
+    method:'POST',
+    headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify(items)
+  });
+}
+async function loadCloudKnowledge(options={}){
+  if(!siteUnlocked) return;
+  if(!options.quiet) setKnowledgeStatus('正在读取云端知识点...');
+  try{
+    const rows=await supabaseRequest('knowledge_items?select=id,content,updated_at');
+    const cells=[...document.querySelectorAll('.knowledge-list .editable-cell')];
+    if(!rows || rows.length===0){
+      await upsertKnowledgeItems(cells.map(knowledgePayload));
+      if(!options.quiet) setKnowledgeStatus('云端知识点已初始化');
+      return;
+    }
+    const byId=new Map(rows.map(row=>[row.id,row]));
+    cells.forEach(cell=>{
+      const row=byId.get(cell.dataset.key);
+      if(row && cell.dataset.dirty!=='1') cell.innerHTML=row.content;
+    });
+    if(!options.quiet) setKnowledgeStatus('已读取云端最新知识点');
+  }catch(error){
+    console.error(error);
+    if(!options.quiet) setKnowledgeStatus('云端读取失败，请检查网络后刷新');
+  }
+}
+async function saveKnowledgeCell(cell, saveBtn){
+  if(!requireKnowledgeEdit()) return;
+  saveBtn.disabled=true;
+  saveBtn.textContent='保存中';
+  setKnowledgeStatus('正在保存到云端...');
+  try{
+    localStorage.setItem(cell.dataset.key, cell.innerHTML);
+    await upsertKnowledgeItems([knowledgePayload(cell)]);
+    cell.dataset.dirty='0';
+    saveBtn.classList.add('saved');
+    saveBtn.textContent='已保存';
+    setKnowledgeStatus(`已保存到云端：${cell.closest('tr').querySelectorAll('td')[1].textContent.trim()}`);
+    setTimeout(()=>{saveBtn.classList.remove('saved');saveBtn.textContent='保存';saveBtn.disabled=false;},1200);
+  }catch(error){
+    console.error(error);
+    saveBtn.textContent='重试';
+    saveBtn.disabled=false;
+    setKnowledgeStatus('云端保存失败，请重试');
+  }
 }
 function initKnowledgeEditor(){
   document.querySelectorAll('.knowledge-list table').forEach(table=>{
@@ -557,15 +647,11 @@ function initKnowledgeEditor(){
     saveBtn.className='save-one';
     saveBtn.textContent='保存';
     saveBtn.addEventListener('click',()=>{
-      if(!requireKnowledgeEdit()) return;
-      localStorage.setItem(key, editable.innerHTML);
-      saveBtn.classList.add('saved');
-      saveBtn.textContent='已保存';
-      setKnowledgeStatus(`已保存：${cells[1].textContent.trim()}`);
-      setTimeout(()=>{saveBtn.classList.remove('saved');saveBtn.textContent='保存';},1200);
+      saveKnowledgeCell(editable, saveBtn);
     });
     editable.addEventListener('input',()=>{
       if(!siteUnlocked) return;
+      editable.dataset.dirty='1';
       saveBtn.textContent='保存';
       saveBtn.classList.remove('saved');
       setKnowledgeStatus('有未保存修改');
@@ -576,12 +662,25 @@ function initKnowledgeEditor(){
   });
   setKnowledgeEditMode(siteUnlocked);
 }
-function saveAllKnowledge(){
+async function saveAllKnowledge(){
   if(!requireKnowledgeEdit()) return;
-  document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
-    localStorage.setItem(cell.dataset.key, cell.innerHTML);
-  });
-  setKnowledgeStatus('全部知识点已保存');
+  const button=document.querySelector('#saveAllKnowledge');
+  const cells=[...document.querySelectorAll('.knowledge-list .editable-cell')];
+  button.disabled=true;
+  button.textContent='保存中';
+  setKnowledgeStatus('正在保存全部知识点到云端...');
+  try{
+    cells.forEach(cell=>localStorage.setItem(cell.dataset.key, cell.innerHTML));
+    await upsertKnowledgeItems(cells.map(knowledgePayload));
+    cells.forEach(cell=>cell.dataset.dirty='0');
+    setKnowledgeStatus('全部知识点已保存到云端');
+  }catch(error){
+    console.error(error);
+    setKnowledgeStatus('全部保存失败，请检查网络后重试');
+  }finally{
+    button.disabled=false;
+    button.textContent='保存全部';
+  }
 }
 initKnowledgeEditor();
 setSiteAccess(siteUnlocked);
@@ -619,6 +718,11 @@ function filterKnowledge(term){
     row.classList.toggle('hidden',term && !row.innerText.toLowerCase().includes(term.toLowerCase()));
   });
 }
+setInterval(()=>{
+  if(siteUnlocked && !document.activeElement?.classList?.contains('editable-cell')){
+    loadCloudKnowledge({quiet:true});
+  }
+},15000);
 
 const questionData={
 choice:[
