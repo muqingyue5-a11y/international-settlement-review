@@ -170,7 +170,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
 
     <section class="page" id="knowledge">
       <div class="hero"><h1>知识点总表</h1><p>以下按《国际结算复习（完整版）》逐条整理。每一条都直接列出要背的内容、答题口径和易错点。</p></div>
-      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="saveAllKnowledge">保存全部</button><span class="save-status" id="knowledgeStatus">可单独修改每条知识点</span></div>
+      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="saveAllKnowledge">保存全部</button><span class="save-status" id="knowledgeStatus">管理员可修改知识点，普通账号只能查看</span></div>
       <div class="edit-tip">点击任意一行的“必须掌握的具体内容”即可修改；点该行“保存”只保存这一条。保存内容目前存放在当前浏览器本地。</div>
       <div class="panel knowledge-list">
         <h2>绪论</h2>
@@ -486,10 +486,14 @@ nav.forEach(btn=>btn.addEventListener('click',()=>{
 const knowledgeStorePrefix='intlSettlementKnowledge:v1:';
 const supabaseUrl='https://eytgjgajktedzetcwcuw.supabase.co';
 const supabaseAnonKey='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGdqZ2Fqa3RlZHpldGN3Y3V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NzgzMjgsImV4cCI6MjA5NjU1NDMyOH0.OglhO3l8Sz0FwGU5FG4qVp9OzZ_DrJzPAO77TmCTk1o';
-const siteAccount='gjjs';
-const sitePassword='gjjs2026';
+const adminAccount='gjjs';
+const adminPassword='gjjs2026';
+const viewerAccount='reader-x7';
+const viewerPassword='ViewOnly-831';
 const siteSessionKey='intlSettlementSiteUnlocked';
+const siteRoleSessionKey='intlSettlementSiteRole';
 let siteUnlocked=sessionStorage.getItem(siteSessionKey)==='1';
+let siteRole=sessionStorage.getItem(siteRoleSessionKey) || '';
 let cloudLoadStarted=false;
 function setKnowledgeStatus(text){
   const status=document.querySelector('#knowledgeStatus');
@@ -516,24 +520,39 @@ async function supabaseRequest(path, options={}){
   const text=await response.text();
   return text ? JSON.parse(text) : null;
 }
-function setKnowledgeEditMode(unlocked){
+function canEditKnowledge(){
+  return siteUnlocked && siteRole==='admin';
+}
+function setKnowledgeEditMode(){
+  const editable=canEditKnowledge();
   document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
-    cell.contentEditable=unlocked?'true':'false';
-    cell.classList.toggle('locked',!unlocked);
+    cell.contentEditable=editable?'true':'false';
+    cell.classList.toggle('locked',!editable);
   });
   document.querySelectorAll('.save-one,#saveAllKnowledge').forEach(btn=>{
-    btn.disabled=!unlocked;
+    btn.disabled=!editable;
   });
-  setKnowledgeStatus(unlocked?'可单独修改每条知识点':'请先登录网页');
+  if(!siteUnlocked) setKnowledgeStatus('请先登录网页');
+  else if(editable) setKnowledgeStatus('管理员模式：可单独修改并保存知识点');
+  else setKnowledgeStatus('普通账号：只能查看，不能编辑保存');
 }
-async function setSiteAccess(unlocked){
+function setCloudReadyStatus(prefix=''){
+  if(canEditKnowledge()){
+    setKnowledgeStatus(prefix ? `${prefix}，管理员可编辑保存` : '管理员模式：可单独修改并保存知识点');
+    return;
+  }
+  setKnowledgeStatus(prefix ? `${prefix}，普通账号只能查看` : '普通账号：只能查看，不能编辑保存');
+}
+async function setSiteAccess(unlocked, role=''){
   siteUnlocked=unlocked;
+  siteRole=unlocked ? role : '';
   sessionStorage.setItem(siteSessionKey,unlocked?'1':'0');
+  sessionStorage.setItem(siteRoleSessionKey,siteRole);
   const login=document.querySelector('#siteLogin');
   const shell=document.querySelector('#appShell');
   if(login) login.hidden=unlocked;
   if(shell) shell.hidden=!unlocked;
-  setKnowledgeEditMode(unlocked);
+  setKnowledgeEditMode();
   if(!unlocked){
     const user=document.querySelector('#siteUser');
     const password=document.querySelector('#sitePassword');
@@ -547,8 +566,9 @@ async function setSiteAccess(unlocked){
   }
 }
 function requireKnowledgeEdit(){
-  if(siteUnlocked) return true;
-  setSiteAccess(false);
+  if(canEditKnowledge()) return true;
+  if(siteUnlocked) setKnowledgeStatus('普通账号没有编辑权限');
+  else setSiteAccess(false);
   return false;
 }
 function knowledgeKey(row, index){
@@ -566,7 +586,7 @@ function knowledgePayload(cell){
     topic:cells[1]?.textContent?.trim() || '',
     content:cell.innerHTML,
     updated_at:new Date().toISOString(),
-    updated_by:siteAccount
+    updated_by:siteRole || 'web'
   };
 }
 async function upsertKnowledgeItems(items){
@@ -584,7 +604,7 @@ async function loadCloudKnowledge(options={}){
     const cells=[...document.querySelectorAll('.knowledge-list .editable-cell')];
     if(!rows || rows.length===0){
       await upsertKnowledgeItems(cells.map(knowledgePayload));
-      if(!options.quiet) setKnowledgeStatus('云端知识点已初始化');
+      if(!options.quiet) setCloudReadyStatus('云端知识点已初始化');
       return;
     }
     const byId=new Map(rows.map(row=>[row.id,row]));
@@ -592,7 +612,7 @@ async function loadCloudKnowledge(options={}){
       const row=byId.get(cell.dataset.key);
       if(row && cell.dataset.dirty!=='1') cell.innerHTML=row.content;
     });
-    if(!options.quiet) setKnowledgeStatus('已读取云端最新知识点');
+    if(!options.quiet) setCloudReadyStatus('已读取云端最新知识点');
   }catch(error){
     console.error(error);
     if(!options.quiet) setKnowledgeStatus('云端读取失败，请检查网络后刷新');
@@ -650,7 +670,7 @@ function initKnowledgeEditor(){
       saveKnowledgeCell(editable, saveBtn);
     });
     editable.addEventListener('input',()=>{
-      if(!siteUnlocked) return;
+      if(!canEditKnowledge()) return;
       editable.dataset.dirty='1';
       saveBtn.textContent='保存';
       saveBtn.classList.remove('saved');
@@ -660,7 +680,7 @@ function initKnowledgeEditor(){
     row.appendChild(saveTd);
     row.dataset.editReady='1';
   });
-  setKnowledgeEditMode(siteUnlocked);
+  setKnowledgeEditMode();
 }
 async function saveAllKnowledge(){
   if(!requireKnowledgeEdit()) return;
@@ -683,17 +703,20 @@ async function saveAllKnowledge(){
   }
 }
 initKnowledgeEditor();
-setSiteAccess(siteUnlocked);
+setSiteAccess(siteUnlocked, siteRole);
 document.querySelector('#saveAllKnowledge').addEventListener('click',saveAllKnowledge);
 document.querySelector('#siteLoginButton').addEventListener('click',()=>{
   const user=document.querySelector('#siteUser');
   const password=document.querySelector('#sitePassword');
   const state=document.querySelector('#siteLoginState');
-  if(user.value===siteAccount && password.value===sitePassword){
+  let role='';
+  if(user.value===adminAccount && password.value===adminPassword) role='admin';
+  if(user.value===viewerAccount && password.value===viewerPassword) role='viewer';
+  if(role){
     user.value='';
     password.value='';
     if(state) state.textContent='';
-    setSiteAccess(true);
+    setSiteAccess(true, role);
     return;
   }
   setSiteAccess(false);
