@@ -170,7 +170,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
 
     <section class="page" id="knowledge">
       <div class="hero"><h1>知识点总表</h1><p>以下按《国际结算复习（完整版）》逐条整理。每一条都直接列出要背的内容、答题口径和易错点。</p></div>
-      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="clearSearch">清空</button><button id="saveAllKnowledge">保存全部</button><button id="resetKnowledge">恢复默认</button><span class="save-status" id="knowledgeStatus">可单独修改每条知识点</span></div>
+      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="saveAllKnowledge">保存全部</button><span class="save-status" id="knowledgeStatus">可单独修改每条知识点</span></div>
       <div class="edit-tip">点击任意一行的“必须掌握的具体内容”即可修改；点该行“保存”只保存这一条。保存内容目前存放在当前浏览器本地。</div>
       <div class="panel knowledge-list">
         <h2>绪论</h2>
@@ -497,7 +497,7 @@ function setKnowledgeEditMode(unlocked){
     cell.contentEditable=unlocked?'true':'false';
     cell.classList.toggle('locked',!unlocked);
   });
-  document.querySelectorAll('.save-one,#saveAllKnowledge,#resetKnowledge').forEach(btn=>{
+  document.querySelectorAll('.save-one,#saveAllKnowledge').forEach(btn=>{
     btn.disabled=!unlocked;
   });
   setKnowledgeStatus(unlocked?'可单独修改每条知识点':'请先登录网页');
@@ -583,18 +583,9 @@ function saveAllKnowledge(){
   });
   setKnowledgeStatus('全部知识点已保存');
 }
-function resetKnowledge(){
-  if(!requireKnowledgeEdit()) return;
-  document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
-    localStorage.removeItem(cell.dataset.key);
-    cell.innerHTML=cell.dataset.defaultHtml;
-  });
-  setKnowledgeStatus('已恢复默认知识点');
-}
 initKnowledgeEditor();
 setSiteAccess(siteUnlocked);
 document.querySelector('#saveAllKnowledge').addEventListener('click',saveAllKnowledge);
-document.querySelector('#resetKnowledge').addEventListener('click',resetKnowledge);
 document.querySelector('#siteLoginButton').addEventListener('click',()=>{
   const user=document.querySelector('#siteUser');
   const password=document.querySelector('#sitePassword');
@@ -621,7 +612,6 @@ document.querySelector('#siteUser').addEventListener('keydown',event=>{
   if(event.key==='Enter') document.querySelector('#sitePassword').focus();
 });
 
-document.querySelector('#clearSearch').addEventListener('click',()=>{document.querySelector('#kSearch').value='';filterKnowledge('');});
 document.querySelector('#kSearch').addEventListener('input',e=>filterKnowledge(e.target.value.trim()));
 function filterKnowledge(term){
   document.querySelectorAll('.knowledge-list tr').forEach((row,i)=>{
