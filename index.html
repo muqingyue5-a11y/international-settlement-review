@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>国际结算期末复习</title>
+<style>
+:root{
+  --bg:#eef2f6;--side:#12223a;--side2:#1b3354;--paper:#fff;--ink:#172033;--muted:#667085;
+  --line:#d8e0ea;--blue:#2457a6;--green:#087443;--amber:#b54708;--red:#b42318;
+  --soft-blue:#edf4ff;--soft-green:#eefbf3;--soft-amber:#fff7ed;--soft-red:#fff1f2;
+  --shadow:0 12px 28px rgba(16,34,63,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65}
+button,input{font:inherit}
+.shell{display:grid;grid-template-columns:270px 1fr;min-height:100vh}
+.side{background:linear-gradient(180deg,var(--side),var(--side2));color:#fff;padding:22px 18px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-size:23px;font-weight:850;line-height:1.18;margin:0 0 8px}
+.source{font-size:12px;color:#c7d4e6;line-height:1.55;margin:12px 0 0;border-top:1px solid rgba(255,255,255,.16);padding-top:12px}
+.nav{display:grid;gap:8px;margin-top:18px}
+.nav button{width:100%;text-align:left;border:0;border-radius:8px;padding:11px 12px;background:rgba(255,255,255,.08);color:#edf4ff;cursor:pointer}
+.nav button:hover,.nav button.active{background:#fff;color:#10233f}
+.main{min-width:0;padding:22px}
+.page{display:none;max-width:1180px;margin:auto}
+.page.active{display:block}
+.hero{background:#fff;border:1px solid var(--line);border-radius:8px;padding:22px;box-shadow:var(--shadow)}
+h1{font-size:30px;line-height:1.2;margin:0 0 8px}
+h2{font-size:23px;margin:0 0 14px}
+h3{font-size:18px;margin:16px 0 8px}
+.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid.two{grid-template-columns:repeat(2,1fr)}
+.grid.four{grid-template-columns:repeat(4,1fr)}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;box-shadow:var(--shadow)}
+.card h3{margin-top:0}
+.metric{background:#142642;color:#fff;border-radius:8px;padding:16px}
+.metric b{display:block;font-size:24px}
+.metric span{color:#cbd8ea;font-size:13px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:18px;margin:14px 0}
+.tag{display:inline-block;border-radius:999px;padding:2px 8px;font-size:12px;margin:2px 4px 2px 0;border:1px solid var(--line)}
+.must{background:var(--soft-red);color:var(--red);border-color:#fecaca}.biz{background:var(--soft-green);color:var(--green);border-color:#bbf7d0}.mem{background:var(--soft-blue);color:var(--blue);border-color:#bfdbfe}.easy{background:var(--soft-amber);color:var(--amber);border-color:#fed7aa}
+table{width:100%;border-collapse:collapse;background:#fff;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 10px;vertical-align:top}
+th{background:#eef3f8;text-align:left}
+.note{background:var(--soft-blue);border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin:10px 0}
+.warn{background:var(--soft-red);border:1px solid #fecaca;border-radius:8px;padding:12px;margin:10px 0}
+.formula{background:var(--soft-green);border:1px solid #a7f3d0;border-radius:8px;padding:12px;margin:10px 0}
+.flow{white-space:pre-wrap;background:#111827;color:#edf2f7;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow:auto}
+.bill{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+.bill-paper{border:2px solid #172033;border-radius:8px;background:#fff;padding:16px}
+.bill-title{text-align:center;font-weight:850;font-size:19px;letter-spacing:.04em;margin-bottom:10px}
+.line{display:grid;grid-template-columns:160px 1fr;gap:8px;border-bottom:1px dashed #cbd5e1;padding:6px 0}
+.line b{color:#10233f}
+.book-sheet{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0;font-family:"Times New Roman","Songti SC",serif;box-shadow:var(--shadow)}
+.book-sheet-title{text-align:center;font-size:22px;font-weight:700;margin-bottom:12px}
+.book-row{display:grid;grid-template-columns:210px 70px 1fr;gap:10px;align-items:start;padding:4px 0}
+.book-row .label{letter-spacing:.01em;color:#334155}
+.book-row .code{text-align:right;color:#475569}
+.book-row .value{color:#111827}
+.book-row.block{align-items:start}
+.book-break{height:1px;background:#cbd5e1;margin:14px 0}
+.draft-box{border:2px solid #111827;border-radius:6px;background:#fff;padding:18px;margin:12px 0;font-family:"Times New Roman","Songti SC",serif}
+.draft-title{text-align:center;font-size:24px;font-weight:700;letter-spacing:.04em;margin-bottom:12px}
+.draft-line{display:grid;grid-template-columns:190px 1fr;gap:12px;border-bottom:1px solid #cbd5e1;min-height:32px;padding:5px 0}
+.draft-line .name{font-weight:700;color:#111827}
+.draft-line .value{color:#111827}
+.cn-note{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:10px}
+.cn-note h4{margin:0 0 8px;font-size:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer}
+.tabs button.active{background:#10233f;color:#fff;border-color:#10233f}
+.question-set{display:none}.question-set.active{display:block}
+.q{background:#fff;border:1px solid var(--line);border-radius:8px;padding:13px;margin:10px 0}
+.q-title{font-weight:750;margin-bottom:8px}
+.options{display:grid;gap:6px;margin:8px 0}
+.options button{text-align:left;border:1px solid var(--line);border-radius:8px;background:#fbfcfe;padding:9px;cursor:pointer}
+.options button.correct{border-color:#86efac;background:#f0fdf4;color:#087443}
+.options button.wrong{border-color:#fecaca;background:#fff1f2;color:#b42318}
+.answer{display:none;border-left:4px solid var(--green);background:#f0fdf4;padding:10px 12px;margin-top:8px}
+.q.open .answer{display:block}
+.toggle-answer{border:1px solid #bbf7d0;background:#f0fdf4;color:#087443;border-radius:8px;padding:7px 10px;cursor:pointer}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.image-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.image-grid img{width:100%;height:170px;object-fit:cover;border:1px solid var(--line);border-radius:8px;background:#fff}
+.searchbar{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.searchbar input{flex:1;min-width:260px;border:1px solid var(--line);border-radius:8px;padding:10px 12px}.searchbar button{border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px 12px;cursor:pointer}
+.edit-lock{display:grid;grid-template-columns:minmax(160px,220px) minmax(190px,1fr) auto auto;gap:8px;align-items:center;background:#eef6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;margin:12px 0}
+.edit-lock input{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff}
+.edit-lock button{border:1px solid #93c5fd;background:#fff;color:#1d4ed8;border-radius:8px;padding:9px 12px;cursor:pointer}
+.edit-lock .danger{border-color:#fecaca;color:#b42318;background:#fff7f7}
+.edit-lock-state{font-size:13px;color:#1d4ed8}
+.locked-content[hidden]{display:none!important}
+.edit-tip{background:#fff7ed;border:1px solid #fed7aa;color:#92400e;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:14px}
+.editable-cell{background:#fffdfa;outline:none;min-width:280px}
+.editable-cell.locked{background:#f8fafc;color:#334155}
+.editable-cell:focus{box-shadow:inset 0 0 0 2px #f59e0b;background:#fff7ed}
+.save-cell{width:92px;text-align:center}
+.save-one{border:1px solid #bbf7d0;background:#f0fdf4;color:#087443;border-radius:8px;padding:6px 9px;cursor:pointer}
+.save-one:disabled,.searchbar button:disabled{cursor:not-allowed;opacity:.45}
+.save-one.saved{background:#dcfce7}
+.save-status{font-size:13px;color:var(--muted);align-self:center}
+.hidden{display:none!important}
+mark{background:#fff1a6;border-radius:3px;padding:0 2px}
+@media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px}.grid,.grid.two,.grid.four,.bill,.split,.image-grid,.edit-lock{grid-template-columns:1fr}.line{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <p class="brand">国际结算<br>期末复习</p>
+    <p class="muted" style="color:#c7d4e6">左侧切换页面，不再把所有内容堆在一页。</p>
+    <div class="nav" id="nav">
+      <button class="active" data-page="home">考试地图</button>
+      <button data-page="knowledge">知识点总表</button>
+      <button data-page="bill">填写汇票</button>
+      <button data-page="lc">信用证与流程</button>
+      <button data-page="questions">题库练习</button>
+      <button data-page="quick">速记与图片</button>
+    </div>
+    <div class="source">来源：老师《国际结算复习（完整版）》、教材扫描 PDF、贴现例题、信用证资料、课堂图片。未使用网络搜索。知识点页直接罗列复习完整版中的全部考点。</div>
+  </aside>
+
+  <main class="main">
+    <section class="page active" id="home">
+      <div class="hero">
+        <h1>国际结算期末复习地图</h1>
+        <p>这版按“页面切换”组织：先看知识点总表确认老师文档所有点都覆盖，再去填写汇票专项和题库练习刷题。</p>
+      </div>
+      <div class="grid four" style="margin-top:14px">
+        <div class="metric"><b>4类题型</b><span>选择、判断、简答、业务题</span></div>
+        <div class="metric"><b>全部知识点</b><span>按老师复习完整版逐条覆盖</span></div>
+        <div class="metric"><b>34道题</b><span>选择、判断、简答、业务题</span></div>
+        <div class="metric"><b>1个重点专项</b><span>填写汇票单独训练</span></div>
+      </div>
+      <div class="panel">
+        <h2>复习顺序</h2>
+        <table>
+          <tr><th>顺序</th><th>页面</th><th>目标</th></tr>
+          <tr><td>1</td><td>知识点总表</td><td>检查老师文档里的所有知识点都见过一遍，直接背网页中的展开内容。</td></tr>
+          <tr><td>2</td><td>填写汇票</td><td>把信用证 20、31C、32B、42A、42C 等字段迁移到汇票。</td></tr>
+          <tr><td>3</td><td>信用证与流程</td><td>背 T/T、D/D、D/P 远期、D/A、信用证 10 步流程。</td></tr>
+          <tr><td>4</td><td>题库练习</td><td>选择题和判断题查漏，简答题背答题口径，业务题练步骤。</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="page" id="knowledge">
+      <div class="hero"><h1>知识点总表</h1><p>以下按《国际结算复习（完整版）》逐条整理。每一条都直接列出要背的内容、答题口径和易错点。</p></div>
+      <div class="edit-lock">
+        <input id="knowledgeUser" type="text" placeholder="账号" autocomplete="username" />
+        <input id="editPassword" type="password" placeholder="密码" autocomplete="current-password" />
+        <button id="unlockEdit" type="button">进入知识点</button>
+        <button id="lockEdit" class="danger" type="button">退出</button>
+        <span class="edit-lock-state" id="editLockState">请输入账号密码进入知识点总表</span>
+      </div>
+      <div id="knowledgeContent" class="locked-content" hidden>
+      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="clearSearch">清空</button><button id="saveAllKnowledge">保存全部</button><button id="resetKnowledge">恢复默认</button><span class="save-status" id="knowledgeStatus">输入编辑密码后可单独修改每条知识点</span></div>
+      <div class="edit-tip">进入知识点总表后，可以修改“必须掌握的具体内容”。点该行“保存”只保存这一条；保存内容目前存放在当前浏览器本地。</div>
+      <div class="panel knowledge-list">
+        <h2>绪论</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>理解</td><td>引起跨国货币收支的原因</td><td>国际贸易中的货款收付；国际服务贸易中的运输、保险、旅游、劳务收支；国际投资和借贷形成的本金、利息、股息收支；国际汇兑、捐赠、赔偿等非贸易收支。答题时写成“跨国经济交易引起不同国家当事人之间的债权债务和货币收付”。</td></tr>
+          <tr><td>理解</td><td>国际结算的工具、方式和单据</td><td>工具：汇票、本票、支票等票据和支付凭证。方式：汇款、托收、信用证等完成资金和单据流转的流程。单据：商业发票、运输单据、保险单据、装箱单、产地证、检验证书等。三者关系：工具解决“凭什么支付”，方式解决“怎样支付”，单据解决“凭什么付款、提货、索赔”。</td></tr>
+          <tr><td>了解</td><td>国际结算方式的发展和现状</td><td>从现金结算发展到非现金结算；从买卖双方直接结算发展到银行中介结算；从单纯资金收付发展到资金、单据、信用和融资结合；现代结算强调电子化、标准化、银行网络和风险控制。</td></tr>
+          <tr><td>记忆</td><td>银行海外机构网络的构成、主要形式、为什么需要</td><td>构成：海外分行、子银行、代表处、代理行、账户行。主要形式：自设海外机构和建立代理行/账户行关系。为什么需要：传递支付指令、办理收付、清算资金、提供信用证明、处理单据、降低跨境结算成本和风险。</td></tr>
+          <tr><td>理解</td><td>账户行和代理行关系</td><td>代理行是接受委托办理业务的银行关系，不一定互开账户。账户行是在代理关系基础上开立账户并能进行资金清算的银行。账户行关系更强调账务清算，代理行关系更强调业务委托。</td></tr>
+          <tr><td>理解</td><td>往账和来账</td><td>往账：本行向外部银行发出的支付、收款、清算或账务处理指令。来账：外部银行向本行发来的支付、收款、清算或账务处理指令。判断时看“谁发出、谁收到”。</td></tr>
+          <tr><td>理解</td><td>控制文件的构成</td><td>代理行/账户行协议、印鉴样本、密押或认证方式、费率表、业务权限、账户资料、通信方式、清算安排等。作用是核验指令真伪、明确权限、控制操作风险。</td></tr>
+          <tr><td>理解</td><td>国际汇兑资金偿付，重点账户行直接入账</td><td>资金偿付是银行之间完成付款资金划拨的过程。账户行直接入账链路：汇款行账户 → 账户行记账 → 收款行/收款人。重点掌握：有账户关系时可通过账户直接借记或贷记完成清算。</td></tr>
+        </table>
+
+        <h2>第二章 国际贸易结算中的票据</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>记忆</td><td>票据三种转让方式：过户、交付、流通</td><td>过户：书面告知票据债务人，债务人向新债权人承担债务，受让人受转让人权利缺陷影响，例：股票、人寿保单。交付：将票据交给受让人或背书后交付，不通知债务人，受让人仍受权利缺陷影响，例：提单、仓单、栈单。流通：交付或背书交付，善意支付对价的受让人取得完整票据权利，不受前手权利缺陷影响，例：汇票、本票、支票。</td></tr>
+          <tr><td>理解</td><td>票据性质：重点流通性、无因性</td><td>流通性：票据可通过交付或背书交付转让，便于在市场中流通。无因性：票据权利义务原则上不以基础交易是否有效为转移，持票人可以依票据文义主张权利。还要理解票据的文义性、要式性、设权性、提示性等特征。</td></tr>
+          <tr><td>了解</td><td>票据的作用</td><td>支付作用：替代现金完成付款。结算作用：清偿债权债务。信用作用：远期票据体现信用延期。融资作用：可贴现、转让取得资金。流通作用：通过背书和交付转让权利。</td></tr>
+          <tr><td>理解</td><td>票据基本当事人及权责</td><td>出票人：签发票据并承担相应票据责任。付款人：被要求付款的人，汇票中经承兑后承担主债务。收款人：票据上指定取得票款的人。要会区分汇票、本票、支票基本当事人数量不同。</td></tr>
+          <tr><td>理解</td><td>其他当事人，重点前四种</td><td>背书人：通过背书转让票据并承担担保责任。被背书人：接受背书取得票据权利。承兑人：承诺到期付款的付款人。保证人：为票据债务提供保证。还可见持票人、参加付款人等。</td></tr>
+          <tr><td>理解</td><td>持票人分类：一般、对价、正当持票人，中英文和包括情况</td><td>一般持票人 holder：合法持有票据的人。对价持票人 holder for value：取得票据时支付对价的人。正当持票人 holder in due course：善意、支付对价、取得未过期且表面合格票据的人，权利保护最强。考试重点是能区分“是否支付对价、是否善意、是否取得完整权利”。</td></tr>
+          <tr><td>了解</td><td>英美法系和大陆法系</td><td>英美法系重视判例和商业习惯，票据制度强调正当持票人保护。大陆法系重视成文法和票据形式。考试通常考两大票据法体系的名称和差异判断。</td></tr>
+          <tr><td>理解+记忆</td><td>中国票据法：何时生效和主要内容</td><td>记忆《中华人民共和国票据法》的生效时间；理解其规范对象包括汇票、本票、支票；主要内容包括票据行为、票据权利、票据责任、追索、抗辩、丧失票据补救等。</td></tr>
+        </table>
+
+        <h2>第三章 汇票</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>记忆+运用</td><td>汇票填写</td><td>必须会填：No. 汇票号码；Date 出票日期和地点；Exchange for 汇票金额小写；At 付款期限；First/Second of exchange 付一不付二；Pay to the order of 收款人；Drawn under L/C No. 信用证号码；Dated 信用证开证日期；Issued by 信用证开证行；To 付款人；出票人和 Authorized Signature。注意：Dated 是信用证开证日期，不是汇票出票日期。</td></tr>
+          <tr><td>理解</td><td>汇票必要记载项目和附加记载项目及注意事项</td><td>必要记载项目包括表明“汇票”字样、无条件支付命令、确定金额、付款人名称、收款人名称、出票日期、出票人签章等。附加记载项目包括付款期限、付款地点、出票地点、利息、提示期限、信用证项下出票条款等。必要项目关系到票据是否有效，附加项目影响具体履行。</td></tr>
+          <tr><td>理解</td><td>汇票行为</td><td>出票：签发并交付汇票。背书：转让票据权利。提示：向付款人提示承兑或付款。承兑：付款人承诺到期付款。付款：履行票据债务。退票：拒绝承兑或拒绝付款。退票通知：通知前手票据被拒。拒绝证书：证明退票事实。追索：向前手和其他票据债务人请求偿还。</td></tr>
+          <tr><td>记忆</td><td>追索及保全手续</td><td>追索是持票人在汇票被拒绝承兑或拒绝付款后，向出票人、背书人、保证人等前手请求偿还票据金额、利息和费用的权利。保全手续包括按期提示、取得退票证明或拒绝证书、及时发出退票通知。漏掉保全手续可能影响追索权。</td></tr>
+          <tr><td>计算</td><td>贴现利息、贴现净款、实际贴现利率</td><td>有票面利率：先算到期价值 = 面值 + 面值 × 票面利率 × 票据期限 / 12。无票面利率：到期价值就是面值。贴现利息 = 到期价值 × 贴现率 × 提前贴现月数 / 12。贴现净款 = 到期价值 - 贴现利息。实际贴现利率 = 贴现利息 / 贴现净款 × 12 / 提前贴现月数。</td></tr>
+        </table>
+
+        <h2>第四章 本票和支票</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>记忆</td><td>本票和汇票的区别</td><td>本票是出票人自己承诺付款，汇票是出票人命令付款人付款。本票基本当事人为出票人和收款人，汇票基本当事人为出票人、付款人、收款人。本票出票人是主债务人，汇票承兑后承兑人是主债务人。本票通常不需要承兑，汇票远期付款时常需承兑。</td></tr>
+          <tr><td>了解</td><td>本票用途和形式</td><td>本票可用于信用支付、债务结算和融资安排。形式上要有表明本票的字样、无条件支付承诺、确定金额、收款人、出票日期和出票人签章等。</td></tr>
+          <tr><td>理解</td><td>支票定义和必要项目</td><td>支票是出票人签发，委托办理支票存款业务的银行或其他金融机构在见票时无条件支付确定金额给收款人或持票人的票据。必要项目包括支票字样、无条件支付委托、确定金额、付款人、收款人、出票日期、出票人签章等。</td></tr>
+          <tr><td>理解</td><td>支票特点、种类、止付、退票、与汇票区别</td><td>特点：付款人通常为银行，见票即付，以出票人存款为付款基础。种类：普通支票、现金支票、转账支票等。止付：出票人依法通知银行停止付款。退票：因余额不足、签章不符、记载不合格等被拒付。与汇票区别：支票以银行为付款人且通常即期，汇票可由非银行付款且可为远期。</td></tr>
+        </table>
+
+        <h2>第五章 汇款和托收</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>记忆</td><td>电汇、信汇、票汇中英文</td><td>电汇 Telegraphic Transfer，缩写 T/T；信汇 Mail Transfer，缩写 M/T；票汇 Demand Draft，缩写 D/D。考试常直接考中英文对应。</td></tr>
+          <tr><td>记忆</td><td>电汇流程</td><td>汇款人 → 汇出行 → 汇入行 → 收款人。汇款人向汇出行申请并交款；汇出行用电讯方式通知汇入行；汇入行向收款人解付。特点是速度快、费用相对高、适合急需付款。</td></tr>
+          <tr><td>记忆</td><td>票汇流程</td><td>汇款人向汇出行申请票汇并交款；汇出行签发银行即期汇票交给汇款人；汇款人将汇票寄给收款人；收款人持票向付款行提示；付款行审核后付款。注意票汇依靠汇票实物流转。</td></tr>
+          <tr><td>理解</td><td>退汇、汇款的运用</td><td>退汇是汇款因收款人无法收款、汇款人撤销、资料错误或交易取消等原因退回。汇款适用于预付货款、货到付款、尾款、小额交易、佣金费用、双方信任度较高的业务。风险主要由付款先后决定。</td></tr>
+          <tr><td>记忆</td><td>汇款方式优缺点</td><td>优点：手续简单、速度可选、费用较低、使用灵活。缺点：主要依赖商业信用，银行不保证交易对方履约；预付对进口商不利，货到付款对出口商不利；对单据和货权控制较弱。</td></tr>
+          <tr><td>记忆</td><td>远期付款交单流程</td><td>D/P after sight：出口商发货后提交汇票和单据给托收行；托收行寄给代收行；进口商承兑远期汇票；代收行保留单据；到期进口商付款；代收行收款后才交单。关键句：承兑后不交单，到期付款后交单。</td></tr>
+          <tr><td>记忆</td><td>承兑交单流程</td><td>D/A：出口商发货并委托托收；托收行寄单给代收行；进口商承兑远期汇票；代收行立即交单；进口商凭单提货；到期付款。关键句：承兑后立即交单，因此出口商风险高。</td></tr>
+          <tr><td>理解</td><td>三种交单方式比较</td><td>D/P 即期：付款后交单，出口商较安全。D/P 远期：承兑后不交单，到期付款后交单。D/A：承兑后交单，到期付款。核心比较维度：付款/承兑时间、交单时间、出口商风险、进口商提货时间。</td></tr>
+        </table>
+
+        <h2>第六章 信用证</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>理解</td><td>信用证定义和特点</td><td>信用证是开证行应申请人要求向受益人开立的、有条件的书面付款承诺。特点：银行信用，开证行承担第一性付款责任；独立性，信用证独立于买卖合同；单据交易原则，银行处理单据而不是货物；严格相符原则，单证相符、单单相符才付款。</td></tr>
+          <tr><td>理解</td><td>信用证当事人及权利义务</td><td>开证申请人 applicant：通常为进口商，申请开证并付款赎单。开证行 issuing bank：开立信用证并承担付款责任。受益人 beneficiary：通常为出口商，按证装运交单并收款。通知行 advising bank：通知信用证并核验表面真实性。议付行 negotiating bank：审核单据并向受益人议付。付款行 paying bank：根据信用证付款。偿付行 reimbursing bank：按开证行授权向指定银行偿付。</td></tr>
+          <tr><td>记忆</td><td>开证申请合同下开证行权利义务</td><td>义务：按申请书开立信用证；合理审单；单据相符时付款、承兑或议付；按规定寄单。权利：收取保证金和费用；要求申请人付款赎单；在申请人违约时处分单据或货物；对不符单据有拒付或征求申请人意见的权利。</td></tr>
+          <tr><td>记忆+运用</td><td>信用证内容：根据内容回答问题</td><td>必须记字段：40A 信用证类型；20 信用证号码；31C 开证日期；31D 有效期和地点；50 申请人；59 受益人；32B 金额；41D 支用方式；42C 汇票期限；42A 汇票付款人；43P 是否允许分批；43T 是否允许转运；44A 装运港；44B 目的港；44C 最迟装运日；46B 单据要求；48 交单期限；49 保兑；53A 偿付行；71B 费用承担；78 对付款银行指示。</td></tr>
+          <tr><td>理解</td><td>信用证每一项目注意事项</td><td>日期类：31D 有效期、44C 最迟装运日、48 交单期限要分清。运输类：44A/44B/44C、43P/43T 判断装运、分批、转运是否符合。付款类：32B 金额、41D 支用方式、42C 期限、42A 付款人、53A 偿付行、71B 费用承担。单据类：46B 是审单核心，必须逐项核对。</td></tr>
+          <tr><td>记忆</td><td>信用证业务流程 10 步</td><td>1 进口商申请开证；2 开证行开立信用证；3 通知行通知信用证；4 出口商审证；5 出口商备货装运；6 出口商制单交单；7 指定银行/议付行审单；8 付款、承兑或议付；9 寄单索偿/偿付；10 进口商付款赎单并提货。</td></tr>
+          <tr><td>理解</td><td>信用证种类：卖方远期、买方远期</td><td>卖方远期信用证：出口商接受远期付款，融资便利偏向进口商，出口商承担等待收款或贴现成本。买方远期信用证：对出口商可即期收款，远期融资安排由进口商承担，进口商获得延期付款便利。考试重点是分清“谁即期收款、谁承担远期融资成本”。</td></tr>
+        </table>
+
+        <h2>第八章、商业单据、融资业务</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
+          <tr><td>理解</td><td>托收风险和防范</td><td>风险：进口商拒付、拒绝承兑、承兑后到期不付款；进口国市场价格下跌导致拒收；货物滞港、仓储和转售困难；进口国政治、外汇管制或法律风险。防范：调查进口商资信；选择 D/P 而慎用 D/A；控制货权单据；投保；明确合同违约责任；必要时采用信用证或预付款。</td></tr>
+          <tr><td>记忆</td><td>信用证方式下出口商面临风险</td><td>开证行资信风险；信用证软条款风险；信用证条款与合同不一致风险；装运、交单、制单不符点风险；进口商欺诈或拒付风险；单据遗失、延误和被拒付风险；国家风险和外汇风险。防范靠审证、改证、严格制单、按期装运交单和选择可靠银行。</td></tr>
+          <tr><td>理解</td><td>商业单据作用</td><td>证明卖方履约；作为银行审单和付款依据；作为进口商提货凭证；证明货物运输、保险、数量、重量、品质和产地；作为索赔、报关、结汇和融资依据。</td></tr>
+          <tr><td>理解</td><td>商业单据种类：基本和附属</td><td>基本单据：商业发票、运输单据、保险单据。附属单据：装箱单、重量单、尺码单、产地证、检验证书、受益人证明、装船通知、海关发票等。答题时写“基本单据 + 按信用证要求提交的附属单据”。</td></tr>
+          <tr><td>理解</td><td>发票作用</td><td>商业发票是出口商向进口商开立的货物价款清单。作用：说明货物名称、规格、数量、单价、总价、贸易术语和买卖双方；是进口商付款、银行审单、报关纳税、统计和索赔的重要依据。</td></tr>
+          <tr><td>理解+记忆</td><td>海运提单概念和中英文</td><td>海运提单英文 Bill of Lading，缩写 B/L。它是承运人或其代理人签发的，证明已收到货物并承诺按约运输和交付货物的单据。必须记中英文。</td></tr>
+          <tr><td>理解</td><td>海运提单作用</td><td>三大作用必须完整写：货物收据，证明承运人已收到或装上货物；运输合同证明，证明承运人与托运人之间运输关系；物权凭证，持有人可凭正本提单提货或转让货权。</td></tr>
+          <tr><td>理解+记忆</td><td>海上货物运输保险保障范围、承保险别、主险中英文</td><td>保障范围包括自然灾害、意外事故、装卸转运损失、施救费用、共同海损分摊等。主险中英文：平安险 Free from Particular Average，FPA；水渍险 With Particular Average / With Average，WPA/WA；一切险 All Risks。理解：一切险范围最广，但不是所有风险都赔。</td></tr>
+          <tr><td>了解</td><td>附属单据</td><td>装箱单 packing list：列包装和件数。重量单 weight memo/list：列重量。尺码单 measurement list：列体积。产地证 certificate of origin：证明原产地。检验证书 inspection certificate：证明品质、数量、卫生等。装船通知 shipping advice：通知买方装运信息。</td></tr>
+          <tr><td>记忆</td><td>信用证审单方法：横审、纵审</td><td>横审：单据与单据之间互相核对，检查单单一致。纵审：每份单据与信用证条款核对，检查单证一致。考试答题可以写：先纵审单证，再横审单单，发现不符点及时处理。</td></tr>
+          <tr><td>理解</td><td>福费廷含义</td><td>福费廷是包买商或融资机构无追索权买断出口商持有的、经承兑或担保的远期债权或票据，使出口商提前取得现金并转移收款风险的一种贸易融资方式。关键词：无追索权、买断、远期债权/票据。</td></tr>
+          <tr><td>记忆</td><td>福费廷与一般贴现比较</td><td>追索权：福费廷通常无追索权，一般贴现常有追索权。对象：福费廷多为国际贸易远期债权或票据，一般贴现多为票据。期限：福费廷期限较长，一般贴现期限较短。风险：福费廷风险更多转移给包买商。费用：福费廷费用通常较高。</td></tr>
+          <tr><td>理解</td><td>福费廷流程</td><td>出口商与进口商签订远期付款合同；进口商开立或承兑远期票据并由银行担保；出口商装运交单取得远期债权或票据；出口商将票据无追索权卖给包买商；包买商扣除费用后向出口商付款；到期包买商向债务人或担保银行收款。</td></tr>
+          <tr><td>理解</td><td>福费廷当事人利弊分析</td><td>出口商好处：提前收款、改善现金流、转移进口商信用风险和国家风险、简化应收账款管理。不利：融资成本较高，可能需要合格担保。进口商好处：获得延期付款。不利：融资成本可能转嫁。包买商好处：获得收益。不利：承担债务人、担保行、国家和汇率等风险。</td></tr>
+          <tr><td>理解</td><td>保理含义、当事人、服务内容、应用优势</td><td>保理是保理商以出口商应收账款为基础提供融资和综合服务的业务。当事人：供应商/出口商、债务人/进口商、保理商，国际保理中还可能有出口保理商和进口保理商。服务内容：应收账款融资、销售账管理、催收、信用调查、信用风险担保。应用优势：加快资金回笼、降低坏账风险、减少账款管理成本、扩大赊销能力。</td></tr>
+        </table>
+      </div>
+      </div>
+    </section>
+
+    <section class="page" id="bill">
+      <div class="hero"><h1>填写汇票专项</h1><p>按你发的书上图片格式整理：先用 SWIFT 信用证样本提取字段，再按英文汇票格式填写，并附中文翻译。</p></div>
+      <div class="panel">
+        <h3>一、汇票填写字段来源（仿书上 SWIFT 样式）</h3>
+        <div class="book-sheet">
+          <div class="book-sheet-title">BILL OF EXCHANGE FILLING GUIDE</div>
+          <div class="book-row"><div class="label">DOC. CREDIT NUMBER</div><div class="code">20:</div><div class="value">填入汇票 Drawn under L/C No.</div></div>
+          <div class="book-row"><div class="label">DATE OF ISSUE</div><div class="code">31C:</div><div class="value">填入汇票 Dated，注意不是汇票出票日期</div></div>
+          <div class="book-row"><div class="label">AMOUNT</div><div class="code">32B:</div><div class="value">填入汇票 Exchange for，币种和金额必须一致</div></div>
+          <div class="book-row"><div class="label">AVAILABLE WITH/BY</div><div class="code">41D:</div><div class="value">影响 Pay to the order of，按题目或议付行填写</div></div>
+          <div class="book-row"><div class="label">DRAFTS AT</div><div class="code">42C:</div><div class="value">填入汇票 At，决定 at sight 或远期天数</div></div>
+          <div class="book-row"><div class="label">DRAWEE</div><div class="code">42A:</div><div class="value">填入汇票 To，表示付款人/受票人</div></div>
+          <div class="book-row"><div class="label">BENEFICIARY</div><div class="code">59:</div><div class="value">通常是汇票出票人和签章人</div></div>
+        </div>
+        <div class="warn"><b>扣分点：</b>Dated 不是出票日期；To 不要填 applicant；53A 是偿付行，不等于汇票付款人；44C 是最迟装运日，不是付款期限。</div>
+        <h3>二、书上英文信用证样例：字段提取与中文翻译</h3>
+        <div class="note"><b>用法：</b>先从信用证中抓 20、31C、32B、42C、42A、41D、59，再填汇票。下面按你发的书上样例整理，英文保留原格式，中文附在右侧。</div>
+        <div class="book-sheet">
+          <div class="book-sheet-title">SWIFT SAMPLE CREDIT</div>
+          <div class="book-row"><div class="label">APPLICATION HEADER</div><div class="code"></div><div class="value">SAKURA BANK, LTD., TOKYO</div></div>
+          <div class="book-row"><div class="label">FORM OF DOC. CREDIT</div><div class="code">40A:</div><div class="value">IRREVOCABLE</div></div>
+          <div class="book-row"><div class="label">DOC. CREDIT NUMBER</div><div class="code">20:</div><div class="value">XXXXXX</div></div>
+          <div class="book-row"><div class="label">DATE OF ISSUE</div><div class="code">31C:</div><div class="value">110310</div></div>
+          <div class="book-row"><div class="label">EXPIRY</div><div class="code">31D:</div><div class="value">DATE 110410 PLACE IN THE COUNTRY OF BENEFICIARY</div></div>
+          <div class="book-row block"><div class="label">APPLICANT</div><div class="code">50:</div><div class="value">SEZAM CORP, 46-1, 1-CHOME,<br>YOYOGI, SHIBUYA-KU, TOKYO, JAPAN</div></div>
+          <div class="book-row block"><div class="label">BENEFICIARY</div><div class="code">59:</div><div class="value">SHANGHAI RONGTAI TOYS CO., LTD.<br>NO.165 WU CHAO ROAD, HONG QIAO, SHANGHAI, CHINA</div></div>
+          <div class="book-row"><div class="label">AMOUNT</div><div class="code">32B:</div><div class="value">CURRENCY USD 50000</div></div>
+          <div class="book-row"><div class="label">AVAILABLE WITH/BY</div><div class="code">41D:</div><div class="value">ANY BANK BY NEGOTIATION</div></div>
+          <div class="book-row"><div class="label">DRAFTS AT</div><div class="code">42C:</div><div class="value">DRAFTS AT SIGHT</div></div>
+          <div class="book-row block"><div class="label">DRAWEE</div><div class="code">42A:</div><div class="value">PNBPUS33PHL<br>CORESTATES BANK N. A.<br>PHILADELPHIA, PA</div></div>
+          <div class="book-row"><div class="label">PARTIAL SHIPMENTS</div><div class="code">43P:</div><div class="value">PARTIAL SHIPMENTS ARE NOT ALLOWED</div></div>
+          <div class="book-row"><div class="label">TRANSHIPMENT</div><div class="code">43T:</div><div class="value">TRANSHIPMENT IS NOT ALLOWED</div></div>
+          <div class="book-row"><div class="label">LOADING IN CHARGE</div><div class="code">44A:</div><div class="value">SHANGHAI, CHINA</div></div>
+          <div class="book-row"><div class="label">FOR TRANSPORT TO</div><div class="code">44B:</div><div class="value">YOKOHAMA, JAPAN</div></div>
+          <div class="book-row"><div class="label">LATEST DATE OF SHIP.</div><div class="code">44C:</div><div class="value">110331</div></div>
+          <div class="book-row block"><div class="label">DESCRIPT OF GOODS</div><div class="code">45A:</div><div class="value">STUFFED TOYS<br>TRADE TERM: CIF YOKOHAMA, JAPAN</div></div>
+          <div class="book-row block"><div class="label">ADDITIONAL COND.</div><div class="code">47A:</div><div class="value">INSPECTION CERTIFICATE ISSUED BY SEZAM SHANGHAI OFFICE ARE REQUIRED.<br>T.T. REIMBURSEMENT IS NOT ACCEPTABLE.</div></div>
+          <div class="book-break"></div>
+          <div class="book-row block"><div class="label">DETAILS OF CHARGES</div><div class="code">71B:</div><div class="value">ALL BANKING CHARGES OUTSIDE JAPAN ARE FOR ACCOUNT OF BENEFICIARY</div></div>
+          <div class="book-row block"><div class="label">PRESENTATION PERIOD</div><div class="code">48:</div><div class="value">DOCUMENTS MUST BE PRESENTED WITHIN 10 DAYS AFTER THE DATE OF SHIPMENT</div></div>
+          <div class="book-row"><div class="label">CONFIRMATION</div><div class="code">49:</div><div class="value">WITHOUT</div></div>
+          <div class="book-row block"><div class="label">REIMBURSEMENT BANK</div><div class="code">53A:</div><div class="value">PNBPUS33PHL<br>CORESTATES BANK N. A.<br>PHILADELPHIA, PA</div></div>
+          <div class="book-row block"><div class="label">DOCUMENTS REQUIRED</div><div class="code">46B:</div><div class="value">SIGNED COMMERCIAL INVOICE IN 3 COPIES;<br>FULL SET OF CLEAN ON BOARD OCEAN B/L;<br>INSURANCE POLICY OR CERTIFICATE;<br>PACKING LIST IN 3 COPIES;<br>INSPECTION CERTIFICATE.</div></div>
+        </div>
+        <h3>中文对照明细</h3>
+        <table>
+          <tr><th>SWIFT 项目</th><th>英文原文</th><th>中文翻译 / 填写意义</th></tr>
+          <tr><td>APPLICATION HEADER</td><td>SAKURA BANK, LTD., TOKYO</td><td>申请报文头：日本东京樱花银行有限公司。用于识别开证行/报文来源。</td></tr>
+          <tr><td>40A</td><td>IRREVOCABLE</td><td>不可撤销信用证。</td></tr>
+          <tr><td>20</td><td>XXXXXX</td><td>信用证号码。填写汇票时放入 <b>Drawn under L/C No.</b></td></tr>
+          <tr><td>31C</td><td>110310</td><td>开证日期：2011 年 3 月 10 日。填写汇票时放入 <b>Dated</b>。</td></tr>
+          <tr><td>31D</td><td>DATE 110410 PLACE IN THE COUNTRY OF BENEFICIARY</td><td>有效期：2011 年 4 月 10 日，在受益人所在国家到期。</td></tr>
+          <tr><td>50</td><td>SEZAM CORP, 46-1, 1-CHOME, YOYOGI, SHIBUYA-KU, TOKYO, JAPAN</td><td>开证申请人：SEZAM 公司，日本东京涩谷区代代木一丁目 46-1。通常为进口商。</td></tr>
+          <tr><td>59</td><td>SHANGHAI RONGTAI TOYS CO., LTD., NO.165 WU CHAO ROAD, HONG QIAO, SHANGHAI, CHINA</td><td>受益人：上海荣泰玩具有限公司，中国上海市虹桥吴漕路 165 号。通常为出票人/出口商。</td></tr>
+          <tr><td>32B</td><td>CURRENCY USD 50000</td><td>金额：美元 50,000。填写汇票 <b>Exchange for USD 50,000.00</b>。</td></tr>
+          <tr><td>41D</td><td>ANY BANK BY NEGOTIATION</td><td>可用银行及方式：任意银行议付。收款人可写议付银行或按题目指定。</td></tr>
+          <tr><td>42C</td><td>DRAFTS AT SIGHT</td><td>汇票期限：即期汇票。填写 <b>At sight</b>。</td></tr>
+          <tr><td>42A</td><td>PNBPUS33PHL / CORESTATES BANK N. A., PHILADELPHIA, PA</td><td>付款人/受票人：美国宾夕法尼亚州费城 CORESTATES BANK N.A.。填写汇票 <b>To</b> 栏。</td></tr>
+          <tr><td>43P</td><td>PARTIAL SHIPMENTS ARE NOT ALLOWED</td><td>不允许分批装运。</td></tr>
+          <tr><td>43T</td><td>TRANSHIPMENT IS NOT ALLOWED</td><td>不允许转运。</td></tr>
+          <tr><td>44A</td><td>SHANGHAI, CHINA</td><td>装运港：中国上海。</td></tr>
+          <tr><td>44B</td><td>YOKOHAMA, JAPAN</td><td>目的港：日本横滨。</td></tr>
+          <tr><td>44C</td><td>110331</td><td>最迟装运日：2011 年 3 月 31 日。</td></tr>
+          <tr><td>45A</td><td>STUFFED TOYS / TRADE TERM: CIF YOKOHAMA, JAPAN</td><td>货物描述：毛绒玩具；贸易术语：CIF 日本横滨。</td></tr>
+          <tr><td>47A</td><td>INSPECTION CERTIFICATE ISSUED BY SEZAM SHANGHAI OFFICE ARE REQUIRED. T.T. REIMBURSEMENT IS NOT ACCEPTABLE.</td><td>附加条件：需要由 SEZAM 上海办事处出具检验证书；不接受电汇偿付。</td></tr>
+          <tr><td>71B</td><td>ALL BANKING CHARGES OUTSIDE JAPAN ARE FOR ACCOUNT OF BENEFICIARY</td><td>费用详情：日本以外发生的一切银行费用由受益人承担。</td></tr>
+          <tr><td>48</td><td>DOCUMENTS MUST BE PRESENTED WITHIN 10 DAYS AFTER THE DATE OF SHIPMENT</td><td>交单期限：单据必须在装运日后 10 天内提交。</td></tr>
+          <tr><td>49</td><td>WITHOUT</td><td>不保兑。</td></tr>
+          <tr><td>53A</td><td>PNBPUS33PHL / CORESTATES BANK N. A., PHILADELPHIA, PA</td><td>偿付行：CORESTATES BANK N.A.。注意：53A 是偿付行，不要和 42A 付款人概念混淆；本例二者银行相同。</td></tr>
+          <tr><td>78</td><td>NEGOTIATING BANK SHOULD FORWARD THE DOCUMENTS DIRECT TO SAKURA BANK... IN ONE LOT. IN REIMBURSEMENT NEGOTIATING BANK SHOULD SEND THE BENEFICIARY'S DRAFT TO THE DRAWEE BANK FOR OBTAINING THE PROCEEDS.</td><td>指示：议付行应将单据一次性直接寄交日本东京樱花银行国际业务中心；偿付时，议付行应将受益人汇票寄给付款银行以取得款项。</td></tr>
+          <tr><td>46B</td><td>SIGNED COMMERCIAL INVOICE IN 3 COPIES; FULL SET OF CLEAN ON BOARD OCEAN B/L...; INSURANCE POLICY OR CERTIFICATE...; PACKING LIST IN 3 COPIES; INSPECTION CERTIFICATE...</td><td>所需单据：已签署商业发票一式三份；全套清洁已装船海运提单；保险单或保险凭证；装箱单一式三份；检验证书。</td></tr>
+        </table>
+
+        <h3>三、按书上样例填写的英文汇票</h3>
+        <div class="draft-box">
+          <div class="draft-title">Bill of Exchange</div>
+          <div class="draft-line"><div class="name">No.</div><div class="value">__________ <span style="float:right">Shanghai, Mar. 31, 2011</span></div></div>
+          <div class="draft-line"><div class="name">Exchange for</div><div class="value">USD 50,000.00</div></div>
+          <div class="draft-line"><div class="name">At</div><div class="value">sight of this FIRST of exchange (Second of exchange being unpaid)</div></div>
+          <div class="draft-line"><div class="name">Pay to the order of</div><div class="value">ANY BANK BY NEGOTIATION</div></div>
+          <div class="draft-line"><div class="name">Drawn under L/C No.</div><div class="value">XXXXXX <span style="float:right">Dated Mar. 10, 2011</span></div></div>
+          <div class="draft-line"><div class="name">Issued by</div><div class="value">SAKURA BANK, LTD., TOKYO</div></div>
+          <div class="draft-line"><div class="name">To</div><div class="value">CORESTATES BANK N. A.<br>PHILADELPHIA, PA, U.S.A.</div></div>
+          <div class="draft-line"><div class="name">Drawer</div><div class="value">SHANGHAI RONGTAI TOYS CO., LTD.<br><br>AUTHORIZED SIGNATURE</div></div>
+        </div>
+        <div class="cn-note">
+          <h4>中文对照</h4>
+          <p><b>No.</b>：汇票号码，题图未给，考试按题目给定编号填写。</p>
+          <p><b>Shanghai, Mar. 31, 2011</b>：出票地点和日期。题图未明确出票日，这里按最迟装运日示例；实际考试以题干给定出票日为准。</p>
+          <p><b>Exchange for USD 50,000.00</b>：汇票金额，对应信用证 32B。</p>
+          <p><b>At sight</b>：即期付款，对应 42C DRAFTS AT SIGHT。</p>
+          <p><b>Pay to the order of ANY BANK BY NEGOTIATION</b>：收款人/抬头，来自 41D 任意银行议付；如果题目给具体议付行，就写具体银行。</p>
+          <p><b>Drawn under L/C No. XXXXXX; Dated Mar. 10, 2011</b>：根据信用证号码 XXXXXX 出票，开证日期为 2011 年 3 月 10 日，对应 20 和 31C。</p>
+          <p><b>Issued by SAKURA BANK, LTD., TOKYO</b>：开证行为日本东京樱花银行有限公司。</p>
+          <p><b>To CORESTATES BANK N.A.</b>：付款人/受票人，对应 42A。</p>
+          <p><b>Drawer</b>：出票人为受益人上海荣泰玩具有限公司，对应 59。</p>
+        </div>
+
+        <h3>中文翻译版汇票</h3>
+        <table>
+          <tr><th>英文栏位</th><th>中文意思</th><th>本例填写</th></tr>
+          <tr><td>No.</td><td>汇票号码</td><td>题图未给，可按实际业务编号填写；示例留空。</td></tr>
+          <tr><td>Shanghai, Mar. 31, 2011</td><td>出票地点和日期</td><td>上海，2011 年 3 月 31 日。题目未明确出票日时，考试可按题干给定日期填写。</td></tr>
+          <tr><td>Exchange for USD 50,000.00</td><td>汇票金额</td><td>美元 50,000，对应信用证 32B。</td></tr>
+          <tr><td>At sight</td><td>付款期限</td><td>即期付款，对应 42C DRAFTS AT SIGHT。</td></tr>
+          <tr><td>Pay to the order of ANY BANK BY NEGOTIATION</td><td>收款人</td><td>任意议付银行或其指定人。若题目给具体议付行，应填具体银行名称。</td></tr>
+          <tr><td>Drawn under L/C No. XXXXXX</td><td>根据信用证号码出票</td><td>信用证号码为 XXXXXX，对应 20。</td></tr>
+          <tr><td>Dated Mar. 10, 2011</td><td>信用证开证日期</td><td>2011 年 3 月 10 日，对应 31C。注意不是汇票出票日。</td></tr>
+          <tr><td>Issued by SAKURA BANK, LTD., TOKYO</td><td>开证行</td><td>日本东京樱花银行有限公司。</td></tr>
+          <tr><td>To CORESTATES BANK N. A.</td><td>付款人/受票人</td><td>美国费城 CORESTATES BANK N.A.，对应 42A。</td></tr>
+          <tr><td>SHANGHAI RONGTAI TOYS CO., LTD.</td><td>出票人</td><td>上海荣泰玩具有限公司，即受益人 59。</td></tr>
+        </table>
+        <div class="warn"><b>这道样例最容易错：</b>42A 和 53A 本例银行相同，但概念不同；42A 才是汇票 To 栏付款人。31C 才填 Dated；31D 是信用证有效期，不填 Dated。44C 是最迟装运日，不是出票日期，也不是付款期限。</div>
+      </div>
+    </section>
+
+    <section class="page" id="lc">
+      <div class="hero"><h1>信用证与业务流程</h1><p>这一页只放流程和信用证字段，方便做业务题时快速定位。</p></div>
+      <div class="panel">
+        <h2>信用证字段速查</h2>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>业务题用途</th></tr>
+          <tr><td>40A</td><td>信用证类型</td><td>常见不可撤销</td></tr>
+          <tr><td>20</td><td>信用证号码</td><td>填汇票 Drawn under L/C No.</td></tr>
+          <tr><td>31C</td><td>开证日期</td><td>填汇票 Dated</td></tr>
+          <tr><td>31D</td><td>有效期和地点</td><td>判断是否逾期</td></tr>
+          <tr><td>50</td><td>申请人 Applicant</td><td>进口商</td></tr>
+          <tr><td>59</td><td>受益人 Beneficiary</td><td>出口商，通常出票人</td></tr>
+          <tr><td>32B</td><td>金额</td><td>汇票金额</td></tr>
+          <tr><td>41D</td><td>Available with/by</td><td>支用方式、议付/付款关系</td></tr>
+          <tr><td>42C</td><td>Drafts at</td><td>汇票期限</td></tr>
+          <tr><td>42A</td><td>Drawee</td><td>汇票付款人</td></tr>
+          <tr><td>43P / 43T</td><td>分批 / 转运</td><td>判断是否允许</td></tr>
+          <tr><td>44A / 44B / 44C</td><td>装运港 / 目的港 / 最迟装运日</td><td>判断装运是否合格</td></tr>
+          <tr><td>46B</td><td>Documents required</td><td>审单依据</td></tr>
+          <tr><td>48</td><td>交单期限</td><td>判断交单是否迟交</td></tr>
+          <tr><td>53A</td><td>偿付行</td><td>不要误填为付款人</td></tr>
+          <tr><td>71B</td><td>费用承担</td><td>判断银行费用由谁承担</td></tr>
+        </table>
+      </div>
+      <div class="grid two">
+        <div class="card"><h3>电汇 T/T</h3><pre class="flow">汇款人 → 汇出行 → 汇入行 → 收款人
+✅ 电讯通知，速度快
+✅ 汇入行解付给收款人
+❌ 不靠邮寄汇票完成</pre></div>
+        <div class="card"><h3>票汇 D/D</h3><pre class="flow">汇款人 → 汇出行签发银行即期汇票 → 收款人 → 付款行
+✅ 汇款人取得汇票后寄给收款人
+✅ 收款人提示汇票取款</pre></div>
+        <div class="card"><h3>D/P 远期</h3><pre class="flow">出口商 → 托收行 → 代收行 → 进口商
+✅ 进口商先承兑
+✅ 到期付款后才交单
+❌ 承兑后立即交单不是 D/P 远期</pre></div>
+        <div class="card"><h3>D/A</h3><pre class="flow">出口商 → 托收行 → 代收行 → 进口商
+✅ 进口商承兑后立即交单
+✅ 到期再付款
+❌ 出口商风险较高</pre></div>
+        <div class="card"><h3>信用证 10 步</h3><pre class="flow">进口商申请开证 → 开证行开证 → 通知行通知 → 出口商审证 → 出口商装运 → 出口商交单 → 银行审单 → 付款/承兑/议付 → 寄单索偿 → 进口商付款赎单
+✅ 银行按单据表面相符处理
+❌ 银行不审货物实际状态</pre></div>
+        <div class="card"><h3>审单</h3><pre class="flow">信用证 → 单据 → 单据之间
+✅ 纵审：单证一致
+✅ 横审：单单一致
+❌ 单据不符会形成不符点</pre></div>
+      </div>
+    </section>
+
+    <section class="page" id="questions">
+      <div class="hero"><h1>题库练习</h1><p>新增选择题、判断题、简答题和业务题。选择题点选后会直接标出对错；其他题点“显示答案”。</p></div>
+      <div class="panel">
+        <div class="tabs" id="qtabs">
+          <button class="active" data-q="choice">选择题</button>
+          <button data-q="judge">判断题</button>
+          <button data-q="short">简答题</button>
+          <button data-q="business">业务题</button>
+        </div>
+
+        <div class="question-set active" id="choice"></div>
+        <div class="question-set" id="judge"></div>
+        <div class="question-set" id="short"></div>
+        <div class="question-set" id="business"></div>
+      </div>
+    </section>
+
+    <section class="page" id="quick">
+      <div class="hero"><h1>速记与图片</h1><p>最后一天用这一页背关键词和看课堂图片。</p></div>
+      <div class="panel">
+        <h2>速记卡片</h2>
+        <div class="grid">
+          <div class="card"><h3>汇款</h3><p>电汇 T/T；信汇 M/T；票汇 D/D。</p></div>
+          <div class="card"><h3>托收</h3><p>D/P 即期：付款交单；D/P 远期：到期付款后交单；D/A：承兑后交单。</p></div>
+          <div class="card"><h3>信用证</h3><p>银行信用、独立性、单据交易原则。</p></div>
+          <div class="card"><h3>提单</h3><p>B/L：货物收据、运输合同证明、物权凭证。</p></div>
+          <div class="card"><h3>保险</h3><p>FPA 平安险；WPA/WA 水渍险；All Risks 一切险。</p></div>
+          <div class="card"><h3>福费廷</h3><p>无追索权、买断、远期债权或票据。</p></div>
+        </div>
+        <h2>课堂图片</h2>
+        <div class="image-grid">
+          <img src="d512acfe9819867c4931920ac4adfdcf.jpg" alt="贴现例题1" />
+          <img src="5efcbc922c202757e536dba99c729991.jpg" alt="贴现例题2" />
+          <img src="f389cadae49075f99d7076b56cc0a1dd.jpg" alt="汇票填写" />
+          <img src="4711ed4392b9d007b3eb992180b472b8.jpg" alt="本票与汇票区别" />
+          <img src="adb4be9071ffd7bba580e1344953e332.jpg" alt="保险单据" />
+          <img src="c4f8f30a064c12ed36666508dd585988.jpg" alt="世界两大票据体系" />
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const pages=[...document.querySelectorAll('.page')];
+const nav=[...document.querySelectorAll('#nav button')];
+nav.forEach(btn=>btn.addEventListener('click',()=>{
+  nav.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  pages.forEach(p=>p.classList.toggle('active',p.id===btn.dataset.page));
+  window.scrollTo(0,0);
+}));
+
+const knowledgeStorePrefix='intlSettlementKnowledge:v1:';
+const knowledgeAccount='gjjs';
+const knowledgeEditPassword='gjjs2026';
+let knowledgeEditUnlocked=false;
+function setKnowledgeStatus(text){
+  const status=document.querySelector('#knowledgeStatus');
+  if(status) status.textContent=text;
+}
+function setKnowledgeEditMode(unlocked){
+  knowledgeEditUnlocked=unlocked;
+  const content=document.querySelector('#knowledgeContent');
+  if(content) content.hidden=!unlocked;
+  document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
+    cell.contentEditable=unlocked?'true':'false';
+    cell.classList.toggle('locked',!unlocked);
+  });
+  document.querySelectorAll('.save-one,#saveAllKnowledge,#resetKnowledge').forEach(btn=>{
+    btn.disabled=!unlocked;
+  });
+  const lockState=document.querySelector('#editLockState');
+  if(lockState) lockState.textContent=unlocked?'已进入知识点总表，可以编辑和保存':'请输入账号密码进入知识点总表';
+  setKnowledgeStatus(unlocked?'已进入知识点总表，可以编辑':'知识点总表已退出');
+}
+function requireKnowledgeEdit(){
+  if(knowledgeEditUnlocked) return true;
+  const user=document.querySelector('#knowledgeUser');
+  const password=document.querySelector('#editPassword');
+  if(user) user.focus();
+  if(password) password.value='';
+  return false;
+}
+function knowledgeKey(row, index){
+  const chapter=row.closest('table')?.previousElementSibling?.textContent?.trim() || 'chapter';
+  const cells=row.querySelectorAll('td');
+  const topic=cells[1]?.textContent?.trim() || `row-${index}`;
+  return knowledgeStorePrefix + chapter + ':' + topic;
+}
+function initKnowledgeEditor(){
+  document.querySelectorAll('.knowledge-list table').forEach(table=>{
+    const header=table.querySelector('tr');
+    if(header && !header.querySelector('.save-head')){
+      const th=document.createElement('th');
+      th.className='save-head';
+      th.textContent='保存';
+      header.appendChild(th);
+    }
+  });
+  document.querySelectorAll('.knowledge-list tr').forEach((row,index)=>{
+    if(row.querySelector('th')) return;
+    const cells=row.querySelectorAll('td');
+    if(cells.length<3 || row.dataset.editReady) return;
+    const key=knowledgeKey(row,index);
+    const editable=cells[2];
+    editable.classList.add('editable-cell');
+    editable.contentEditable='false';
+    editable.dataset.key=key;
+    editable.dataset.defaultHtml=editable.innerHTML;
+    const saved=localStorage.getItem(key);
+    if(saved!==null) editable.innerHTML=saved;
+    const saveTd=document.createElement('td');
+    saveTd.className='save-cell';
+    const saveBtn=document.createElement('button');
+    saveBtn.type='button';
+    saveBtn.className='save-one';
+    saveBtn.textContent='保存';
+    saveBtn.addEventListener('click',()=>{
+      if(!requireKnowledgeEdit()) return;
+      localStorage.setItem(key, editable.innerHTML);
+      saveBtn.classList.add('saved');
+      saveBtn.textContent='已保存';
+      setKnowledgeStatus(`已保存：${cells[1].textContent.trim()}`);
+      setTimeout(()=>{saveBtn.classList.remove('saved');saveBtn.textContent='保存';},1200);
+    });
+    editable.addEventListener('input',()=>{
+      if(!knowledgeEditUnlocked) return;
+      saveBtn.textContent='保存';
+      saveBtn.classList.remove('saved');
+      setKnowledgeStatus('有未保存修改');
+    });
+    saveTd.appendChild(saveBtn);
+    row.appendChild(saveTd);
+    row.dataset.editReady='1';
+  });
+  setKnowledgeEditMode(knowledgeEditUnlocked);
+}
+function saveAllKnowledge(){
+  if(!requireKnowledgeEdit()) return;
+  document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
+    localStorage.setItem(cell.dataset.key, cell.innerHTML);
+  });
+  setKnowledgeStatus('全部知识点已保存');
+}
+function resetKnowledge(){
+  if(!requireKnowledgeEdit()) return;
+  document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
+    localStorage.removeItem(cell.dataset.key);
+    cell.innerHTML=cell.dataset.defaultHtml;
+  });
+  setKnowledgeStatus('已恢复默认知识点');
+}
+initKnowledgeEditor();
+document.querySelector('#saveAllKnowledge').addEventListener('click',saveAllKnowledge);
+document.querySelector('#resetKnowledge').addEventListener('click',resetKnowledge);
+document.querySelector('#unlockEdit').addEventListener('click',()=>{
+  const user=document.querySelector('#knowledgeUser');
+  const password=document.querySelector('#editPassword');
+  if(user.value===knowledgeAccount && password.value===knowledgeEditPassword){
+    user.value='';
+    password.value='';
+    setKnowledgeEditMode(true);
+    return;
+  }
+  setKnowledgeEditMode(false);
+  const lockState=document.querySelector('#editLockState');
+  if(lockState) lockState.textContent='账号或密码不正确';
+  password.value='';
+  user.focus();
+});
+document.querySelector('#lockEdit').addEventListener('click',()=>{
+  setKnowledgeEditMode(false);
+});
+document.querySelector('#editPassword').addEventListener('keydown',event=>{
+  if(event.key==='Enter') document.querySelector('#unlockEdit').click();
+});
+document.querySelector('#knowledgeUser').addEventListener('keydown',event=>{
+  if(event.key==='Enter') document.querySelector('#editPassword').focus();
+});
+
+document.querySelector('#clearSearch').addEventListener('click',()=>{document.querySelector('#kSearch').value='';filterKnowledge('');});
+document.querySelector('#kSearch').addEventListener('input',e=>filterKnowledge(e.target.value.trim()));
+function filterKnowledge(term){
+  document.querySelectorAll('.knowledge-list tr').forEach((row,i)=>{
+    if(row.querySelector('th')) return;
+    row.classList.toggle('hidden',term && !row.innerText.toLowerCase().includes(term.toLowerCase()));
+  });
+}
+
+const questionData={
+choice:[
+['国际结算中的 T/T 是指什么？',['电汇','信汇','票汇','托收'],0,'T/T = Telegraphic Transfer，电汇。'],
+['D/A 的核心特征是？',['付款后交单','承兑后交单','见票即付','银行保证付款'],1,'D/A 是 Documents against Acceptance，承兑后交单。'],
+['信用证 42A 通常表示什么？',['申请人','受益人','汇票付款人/受票人','信用证号码'],2,'42A 是 Drawee，常用于汇票 To 栏。'],
+['信用证 31D 表示什么？',['开证日期','有效期/到期地点','最迟装运日','交单期限'],1,'31D 是 Expiry。'],
+['海运提单 B/L 的作用不包括哪一项？',['货物收据','运输合同证明','物权凭证','保险赔偿凭证'],3,'保险赔偿凭证主要看保险单。'],
+['福费廷的关键词是？',['无追索权买断','承兑后交单','付款后交单','银行汇款'],0,'福费廷通常是无追索权买断远期债权或票据。'],
+['汇票 Dated 栏通常填什么？',['汇票出票日期','信用证开证日期','最迟装运日','交单期限'],1,'模板中 Dated 是信用证开证日期，对应 31C。'],
+['D/P 远期与 D/A 的关键区别是？',['是否有汇票','是否承兑','承兑后是否立即交单','是否通过银行'],2,'D/P 远期到期付款后交单；D/A 承兑后交单。'],
+['信用证审单中“纵审”主要看什么？',['单单一致','单证一致','货物质量','买方资信'],1,'纵审看单据与信用证是否一致。'],
+['票据流通中善意支付对价取得完整权利，属于哪种转让？',['过户','交付','流通','退票'],2,'流通区别于普通交付和过户。'],
+['本票与汇票的主要区别之一是？',['本票是支付承诺，汇票是支付命令','本票必须有三个基本当事人','汇票没有付款人','支票不是票据'],0,'本票通常 2 个基本当事人，汇票 3 个。'],
+['信用证 46B 表示什么？',['费用承担','单据要求','转运许可','偿付行'],1,'46B = Documents required。']
+],
+judge:[
+['托收方式下，银行保证进口商一定付款。',false,'托收以商业信用为基础，银行只是代收和交单。'],
+['D/P 远期是进口商承兑后立即取得单据。',false,'承兑后立即交单是 D/A。'],
+['信用证业务中银行处理的是单据而不是货物。',true,'这是信用证单据交易原则。'],
+['汇票 To 栏可以随便填申请人 applicant。',false,'To 应填付款人/受票人，常看 42A。'],
+['海运提单可以作为物权凭证。',true,'提单三大作用之一就是物权凭证。'],
+['票据无因性表示票据关系相对独立于基础交易。',true,'注意不是完全没有原因，而是相对独立。'],
+['53A 是偿付行，不能直接等同于汇票付款人。',true,'汇票付款人通常看 42A。'],
+['FPA、WPA/WA、All Risks 都属于主险中英文记忆范围。',true,'对应平安险、水渍险、一切险。'],
+['信汇的英文缩写是 T/T。',false,'信汇是 M/T；T/T 是电汇。'],
+['福费廷通常强调无追索权买断。',true,'这是与一般贴现比较的重点。']
+],
+short:[
+['简述信用证的特点。','信用证具有银行信用、独立性和单据交易原则。银行按信用证条款和单据表面相符承担付款、承兑或议付责任；信用证独立于买卖合同；银行处理单据而不是货物。'],
+['简述追索的含义和保全手续。','追索是持票人在汇票被拒绝承兑或拒绝付款后，向前手及其他票据债务人请求偿还票据金额和相关费用的权利。保全手续包括按期提示、取得退票证明或拒绝证书、发出退票通知等。'],
+['简述海运提单的作用。','海运提单是承运人收到货物的收据，是运输合同的证明，也是物权凭证。信用证项下常用它证明装运事实和提货权利。'],
+['简述托收风险及防范。','托收以商业信用为基础，银行不保证付款。风险包括进口商拒付或拒绝承兑、市场价格变化、货物滞港和处理困难。防范可通过调查资信、选择 D/P、控制单据、投保和明确合同条款。'],
+['简述福费廷与一般贴现的区别。','福费廷通常是无追索权买断远期债权或票据，风险转移较彻底，期限较长、费用较高；一般贴现通常以票据为对象，银行扣息后给付净款，很多情况下仍保留追索权。'],
+['简述商业单据的作用。','商业单据用于证明交易履行、货物装运、运输、保险、金额和数量等事实，是付款、审单、提货、索赔和结算的重要依据。']
+],
+business:[
+['填写汇票关键栏位：信用证 20 为 LC2026-8899，31C 为 May 10, 2026，32B 为 USD 80,000.00，42C 为 30 days after sight，42A 为 ABC BANK, NEW YORK，59 为 SHANGHAI EXPORT CO., LTD.，41D 为 available with Bank of China Shanghai Branch by negotiation。','Exchange for USD 80,000.00；At 30 days after sight；Pay to the order of Bank of China Shanghai Branch；Drawn under L/C No. LC2026-8899；Dated May 10, 2026；Issued by ABC BANK, NEW YORK；To ABC BANK, NEW YORK；出票人为 SHANGHAI EXPORT CO., LTD.。'],
+['贴现计算：6个月期汇票，面值60000元，票面利率10%，过了4个月后提前2个月贴现，贴现率12%。','到期价值=60000+60000×10%×6/12=63000；贴现利息=63000×12%×2/12=1260；贴现净款=63000-1260=61740；实际贴现利率=1260/61740×12/2=12.24%。'],
+['贴现计算：6个月期汇票，面值60000元，无票面利率，过了4个月后提前2个月贴现，贴现率12%。','到期价值=60000；贴现利息=60000×12%×2/12=1200；贴现净款=58800；实际贴现利率=1200/58800×12/2=12.24%。'],
+['判断交单方式：进口商承兑远期汇票后，代收行立即把货运单据交给进口商，进口商到期再付款。','这是 D/A 承兑交单。关键是承兑后立即交单；如果到期付款后才交单才是 D/P 远期。'],
+['信用证日期判断：31D 为 June 30, 2026，44C 为 June 10, 2026，48 为 within 15 days after shipment。货物 June 12 装运，June 20 交单。','June 12 晚于最迟装运日 June 10，构成装运期不符；June 20 距装运日 8 天，未超过 15 天交单期，且未超过有效期 June 30。'],
+['识别信用证项目：题目要求找金额、汇票付款人、最迟装运日、交单期限、单据要求。','金额看 32B；汇票付款人看 42A；最迟装运日看 44C；交单期限看 48；单据要求看 46B。']
+]
+};
+
+function renderQuestions(){
+  renderChoice();
+  renderJudge();
+  renderSimple('short');
+  renderSimple('business');
+}
+function renderChoice(){
+  const root=document.querySelector('#choice');
+  root.innerHTML=questionData.choice.map((q,i)=>`<div class="q" data-answer="${q[2]}"><div class="q-title">${i+1}. ${q[0]}</div><div class="options">${q[1].map((o,j)=>`<button data-index="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="answer">${q[3]}</div></div>`).join('');
+}
+function renderJudge(){
+  const root=document.querySelector('#judge');
+  root.innerHTML=questionData.judge.map((q,i)=>`<div class="q" data-answer="${q[1]}"><div class="q-title">${i+1}. ${q[0]}</div><div class="options"><button data-index="true">正确</button><button data-index="false">错误</button></div><div class="answer">${q[2]}</div></div>`).join('');
+}
+function renderSimple(id){
+  const root=document.querySelector('#'+id);
+  root.innerHTML=questionData[id].map((q,i)=>`<div class="q"><div class="q-title">${i+1}. ${q[0]}</div><button class="toggle-answer">显示答案</button><div class="answer">${q[1]}</div></div>`).join('');
+}
+renderQuestions();
+document.querySelectorAll('.options button').forEach(btn=>btn.addEventListener('click',()=>{
+  const q=btn.closest('.q'); const ans=String(q.dataset.answer);
+  q.querySelectorAll('.options button').forEach(b=>b.classList.remove('correct','wrong'));
+  const ok=String(btn.dataset.index)===ans;
+  btn.classList.add(ok?'correct':'wrong');
+  q.querySelectorAll('.options button').forEach(b=>{if(String(b.dataset.index)===ans)b.classList.add('correct')});
+  q.classList.add('open');
+}));
+document.querySelectorAll('.toggle-answer').forEach(btn=>btn.addEventListener('click',()=>btn.closest('.q').classList.toggle('open')));
+document.querySelectorAll('#qtabs button').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('#qtabs button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.question-set').forEach(s=>s.classList.toggle('active',s.id===btn.dataset.q));
+}));
+</script>
+</body>
+</html>
