@@ -18,6 +18,17 @@ button,input{font:inherit}
 .side{background:linear-gradient(180deg,var(--side),var(--side2));color:#fff;padding:22px 18px;position:sticky;top:0;height:100vh;overflow:auto}
 .brand{font-size:23px;font-weight:850;line-height:1.18;margin:0 0 8px}
 .source{font-size:12px;color:#c7d4e6;line-height:1.55;margin:12px 0 0;border-top:1px solid rgba(255,255,255,.16);padding-top:12px}
+.side-action{width:100%;border:1px solid rgba(255,255,255,.22);border-radius:8px;padding:10px 12px;margin-top:12px;background:transparent;color:#d4dfec;cursor:pointer;text-align:left}
+.side-action:hover{background:rgba(255,255,255,.08);color:#fff}
+.auth-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#edf4ff,#f8fafc)}
+.auth-card{width:min(460px,100%);background:#fff;border:1px solid var(--line);border-radius:8px;padding:26px;box-shadow:var(--shadow)}
+.auth-card h1{margin:0 0 8px;font-size:30px;line-height:1.2}
+.auth-card p{margin:0 0 18px;color:var(--muted)}
+.auth-form{display:grid;gap:10px}
+.auth-form input{border:1px solid var(--line);border-radius:8px;padding:12px 13px;font-size:15px}
+.auth-form button{border:0;border-radius:8px;background:#10233f;color:#fff;padding:12px 13px;font-size:15px;cursor:pointer}
+.auth-state{min-height:20px;color:var(--red);font-size:14px}
+.shell[hidden],.auth-screen[hidden]{display:none!important}
 .nav{display:grid;gap:8px;margin-top:18px}
 .nav button{width:100%;text-align:left;border:0;border-radius:8px;padding:11px 12px;background:rgba(255,255,255,.08);color:#edf4ff;cursor:pointer}
 .nav button:hover,.nav button.active{background:#fff;color:#10233f}
@@ -105,7 +116,19 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
 </style>
 </head>
 <body>
-<div class="shell">
+<div id="siteLogin" class="auth-screen">
+  <div class="auth-card">
+    <h1>国际结算期末复习</h1>
+    <p>请输入账号密码进入复习网页。</p>
+    <div class="auth-form">
+      <input id="siteUser" type="text" placeholder="账号" autocomplete="username" />
+      <input id="sitePassword" type="password" placeholder="密码" autocomplete="current-password" />
+      <button id="siteLoginButton" type="button">进入网页</button>
+      <span id="siteLoginState" class="auth-state"></span>
+    </div>
+  </div>
+</div>
+<div class="shell" id="appShell" hidden>
   <aside class="side">
     <p class="brand">国际结算<br>期末复习</p>
     <p class="muted" style="color:#c7d4e6">左侧切换页面，不再把所有内容堆在一页。</p>
@@ -118,6 +141,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
       <button data-page="quick">速记与图片</button>
     </div>
     <div class="source">来源：老师《国际结算复习（完整版）》、教材扫描 PDF、贴现例题、信用证资料、课堂图片。未使用网络搜索。知识点页直接罗列复习完整版中的全部考点。</div>
+    <button id="siteLogout" class="side-action" type="button">退出登录</button>
   </aside>
 
   <main class="main">
@@ -146,16 +170,8 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
 
     <section class="page" id="knowledge">
       <div class="hero"><h1>知识点总表</h1><p>以下按《国际结算复习（完整版）》逐条整理。每一条都直接列出要背的内容、答题口径和易错点。</p></div>
-      <div class="edit-lock">
-        <input id="knowledgeUser" type="text" placeholder="账号" autocomplete="username" />
-        <input id="editPassword" type="password" placeholder="密码" autocomplete="current-password" />
-        <button id="unlockEdit" type="button">进入知识点</button>
-        <button id="lockEdit" class="danger" type="button">退出</button>
-        <span class="edit-lock-state" id="editLockState">请输入账号密码进入知识点总表</span>
-      </div>
-      <div id="knowledgeContent" class="locked-content" hidden>
-      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="clearSearch">清空</button><button id="saveAllKnowledge">保存全部</button><button id="resetKnowledge">恢复默认</button><span class="save-status" id="knowledgeStatus">输入编辑密码后可单独修改每条知识点</span></div>
-      <div class="edit-tip">进入知识点总表后，可以修改“必须掌握的具体内容”。点该行“保存”只保存这一条；保存内容目前存放在当前浏览器本地。</div>
+      <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="clearSearch">清空</button><button id="saveAllKnowledge">保存全部</button><button id="resetKnowledge">恢复默认</button><span class="save-status" id="knowledgeStatus">可单独修改每条知识点</span></div>
+      <div class="edit-tip">点击任意一行的“必须掌握的具体内容”即可修改；点该行“保存”只保存这一条。保存内容目前存放在当前浏览器本地。</div>
       <div class="panel knowledge-list">
         <h2>绪论</h2>
         <table>
@@ -246,7 +262,6 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <tr><td>理解</td><td>福费廷当事人利弊分析</td><td>出口商好处：提前收款、改善现金流、转移进口商信用风险和国家风险、简化应收账款管理。不利：融资成本较高，可能需要合格担保。进口商好处：获得延期付款。不利：融资成本可能转嫁。包买商好处：获得收益。不利：承担债务人、担保行、国家和汇率等风险。</td></tr>
           <tr><td>理解</td><td>保理含义、当事人、服务内容、应用优势</td><td>保理是保理商以出口商应收账款为基础提供融资和综合服务的业务。当事人：供应商/出口商、债务人/进口商、保理商，国际保理中还可能有出口保理商和进口保理商。服务内容：应收账款融资、销售账管理、催收、信用调查、信用风险担保。应用优势：加快资金回笼、降低坏账风险、减少账款管理成本、扩大赊销能力。</td></tr>
         </table>
-      </div>
       </div>
     </section>
 
@@ -469,17 +484,15 @@ nav.forEach(btn=>btn.addEventListener('click',()=>{
 }));
 
 const knowledgeStorePrefix='intlSettlementKnowledge:v1:';
-const knowledgeAccount='gjjs';
-const knowledgeEditPassword='gjjs2026';
-let knowledgeEditUnlocked=false;
+const siteAccount='gjjs';
+const sitePassword='gjjs2026';
+const siteSessionKey='intlSettlementSiteUnlocked';
+let siteUnlocked=sessionStorage.getItem(siteSessionKey)==='1';
 function setKnowledgeStatus(text){
   const status=document.querySelector('#knowledgeStatus');
   if(status) status.textContent=text;
 }
 function setKnowledgeEditMode(unlocked){
-  knowledgeEditUnlocked=unlocked;
-  const content=document.querySelector('#knowledgeContent');
-  if(content) content.hidden=!unlocked;
   document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
     cell.contentEditable=unlocked?'true':'false';
     cell.classList.toggle('locked',!unlocked);
@@ -487,16 +500,26 @@ function setKnowledgeEditMode(unlocked){
   document.querySelectorAll('.save-one,#saveAllKnowledge,#resetKnowledge').forEach(btn=>{
     btn.disabled=!unlocked;
   });
-  const lockState=document.querySelector('#editLockState');
-  if(lockState) lockState.textContent=unlocked?'已进入知识点总表，可以编辑和保存':'请输入账号密码进入知识点总表';
-  setKnowledgeStatus(unlocked?'已进入知识点总表，可以编辑':'知识点总表已退出');
+  setKnowledgeStatus(unlocked?'可单独修改每条知识点':'请先登录网页');
+}
+function setSiteAccess(unlocked){
+  siteUnlocked=unlocked;
+  sessionStorage.setItem(siteSessionKey,unlocked?'1':'0');
+  const login=document.querySelector('#siteLogin');
+  const shell=document.querySelector('#appShell');
+  if(login) login.hidden=unlocked;
+  if(shell) shell.hidden=!unlocked;
+  setKnowledgeEditMode(unlocked);
+  if(!unlocked){
+    const user=document.querySelector('#siteUser');
+    const password=document.querySelector('#sitePassword');
+    if(user) user.focus();
+    if(password) password.value='';
+  }
 }
 function requireKnowledgeEdit(){
-  if(knowledgeEditUnlocked) return true;
-  const user=document.querySelector('#knowledgeUser');
-  const password=document.querySelector('#editPassword');
-  if(user) user.focus();
-  if(password) password.value='';
+  if(siteUnlocked) return true;
+  setSiteAccess(false);
   return false;
 }
 function knowledgeKey(row, index){
@@ -542,7 +565,7 @@ function initKnowledgeEditor(){
       setTimeout(()=>{saveBtn.classList.remove('saved');saveBtn.textContent='保存';},1200);
     });
     editable.addEventListener('input',()=>{
-      if(!knowledgeEditUnlocked) return;
+      if(!siteUnlocked) return;
       saveBtn.textContent='保存';
       saveBtn.classList.remove('saved');
       setKnowledgeStatus('有未保存修改');
@@ -551,7 +574,7 @@ function initKnowledgeEditor(){
     row.appendChild(saveTd);
     row.dataset.editReady='1';
   });
-  setKnowledgeEditMode(knowledgeEditUnlocked);
+  setKnowledgeEditMode(siteUnlocked);
 }
 function saveAllKnowledge(){
   if(!requireKnowledgeEdit()) return;
@@ -569,31 +592,33 @@ function resetKnowledge(){
   setKnowledgeStatus('已恢复默认知识点');
 }
 initKnowledgeEditor();
+setSiteAccess(siteUnlocked);
 document.querySelector('#saveAllKnowledge').addEventListener('click',saveAllKnowledge);
 document.querySelector('#resetKnowledge').addEventListener('click',resetKnowledge);
-document.querySelector('#unlockEdit').addEventListener('click',()=>{
-  const user=document.querySelector('#knowledgeUser');
-  const password=document.querySelector('#editPassword');
-  if(user.value===knowledgeAccount && password.value===knowledgeEditPassword){
+document.querySelector('#siteLoginButton').addEventListener('click',()=>{
+  const user=document.querySelector('#siteUser');
+  const password=document.querySelector('#sitePassword');
+  const state=document.querySelector('#siteLoginState');
+  if(user.value===siteAccount && password.value===sitePassword){
     user.value='';
     password.value='';
-    setKnowledgeEditMode(true);
+    if(state) state.textContent='';
+    setSiteAccess(true);
     return;
   }
-  setKnowledgeEditMode(false);
-  const lockState=document.querySelector('#editLockState');
-  if(lockState) lockState.textContent='账号或密码不正确';
+  setSiteAccess(false);
+  if(state) state.textContent='账号或密码不正确';
   password.value='';
   user.focus();
 });
-document.querySelector('#lockEdit').addEventListener('click',()=>{
-  setKnowledgeEditMode(false);
+document.querySelector('#siteLogout').addEventListener('click',()=>{
+  setSiteAccess(false);
 });
-document.querySelector('#editPassword').addEventListener('keydown',event=>{
-  if(event.key==='Enter') document.querySelector('#unlockEdit').click();
+document.querySelector('#sitePassword').addEventListener('keydown',event=>{
+  if(event.key==='Enter') document.querySelector('#siteLoginButton').click();
 });
-document.querySelector('#knowledgeUser').addEventListener('keydown',event=>{
-  if(event.key==='Enter') document.querySelector('#editPassword').focus();
+document.querySelector('#siteUser').addEventListener('keydown',event=>{
+  if(event.key==='Enter') document.querySelector('#sitePassword').focus();
 });
 
 document.querySelector('#clearSearch').addEventListener('click',()=>{document.querySelector('#kSearch').value='';filterKnowledge('');});
