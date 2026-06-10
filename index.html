@@ -63,6 +63,12 @@ th{background:#eef3f8;text-align:left}
 .bill-title{text-align:center;font-weight:850;font-size:19px;letter-spacing:.04em;margin-bottom:10px}
 .line{display:grid;grid-template-columns:160px 1fr;gap:8px;border-bottom:1px dashed #cbd5e1;padding:6px 0}
 .line b{color:#10233f}
+.bill-page .hero{background:linear-gradient(135deg,#fffdf8 0%,#f7fbff 54%,#eef6ff 100%)}
+.bill-stage{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:14px;align-items:start}
+.bill-side-note{position:sticky;top:24px;background:#10233f;color:#eff6ff;border-radius:8px;padding:16px;box-shadow:0 14px 34px rgba(16,35,63,.16)}
+.bill-side-note h3{margin-top:0;color:#fff}
+.bill-side-note ol{margin:8px 0 0;padding-left:20px}
+.bill-side-note li{margin:5px 0}
 .book-sheet{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0;font-family:"Times New Roman","Songti SC",serif;box-shadow:var(--shadow)}
 .book-sheet-title{text-align:center;font-size:22px;font-weight:700;margin-bottom:12px}
 .book-row{display:grid;grid-template-columns:210px 70px 1fr;gap:10px;align-items:start;padding:4px 0}
@@ -71,11 +77,34 @@ th{background:#eef3f8;text-align:left}
 .book-row .value{color:#111827}
 .book-row.block{align-items:start}
 .book-break{height:1px;background:#cbd5e1;margin:14px 0}
+.sample-credit{background:linear-gradient(180deg,#fff 0%,#fffdf8 100%);border-color:#d8c8a6}
+.sample-credit .book-row{position:relative;border-radius:6px;padding:5px 8px;transition:background .16s ease, box-shadow .16s ease}
+.sample-credit .book-row:hover{background:#fff7ed;box-shadow:inset 0 0 0 1px #fed7aa}
+.sample-credit .book-row[data-cn]:hover:after,.sample-credit .book-row[data-cn]:focus-within:after{content:attr(data-cn);position:absolute;left:calc(210px + 90px);right:10px;top:calc(100% + 5px);z-index:6;background:#10233f;color:#fff;border-radius:8px;padding:9px 11px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;line-height:1.55;box-shadow:0 12px 26px rgba(16,35,63,.22)}
+.sample-credit .book-row[data-cn]:hover:before,.sample-credit .book-row[data-cn]:focus-within:before{content:"";position:absolute;left:calc(210px + 104px);top:calc(100% - 2px);border:7px solid transparent;border-bottom-color:#10233f;z-index:7}
+.hover-hint{display:inline-flex;align-items:center;gap:6px;background:#fff7ed;color:#92400e;border:1px solid #fed7aa;border-radius:999px;padding:4px 10px;font-size:13px;margin-left:8px}
+.credit-tooltip{position:fixed;z-index:50;max-width:min(520px,calc(100vw - 28px));background:#10233f;color:#fff;border-radius:8px;padding:10px 12px;box-shadow:0 18px 38px rgba(16,35,63,.25);font-size:14px;line-height:1.55;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s ease, transform .12s ease}
+.credit-tooltip.show{opacity:1;transform:translateY(0)}
 .draft-box{border:2px solid #111827;border-radius:6px;background:#fff;padding:18px;margin:12px 0;font-family:"Times New Roman","Songti SC",serif}
 .draft-title{text-align:center;font-size:24px;font-weight:700;letter-spacing:.04em;margin-bottom:12px}
 .draft-line{display:grid;grid-template-columns:190px 1fr;gap:12px;border-bottom:1px solid #cbd5e1;min-height:32px;padding:5px 0}
 .draft-line .name{font-weight:700;color:#111827}
 .draft-line .value{color:#111827}
+.fillable-draft{border:2px solid #111827;background:#fff;border-radius:8px;padding:20px;margin:12px 0;font-family:"Times New Roman","Songti SC",serif;box-shadow:0 18px 38px rgba(17,24,39,.10)}
+.fillable-draft .draft-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;border-bottom:2px solid #111827;padding-bottom:10px;margin-bottom:12px}
+.fillable-draft .draft-top input{min-width:180px}
+.fill-line{display:grid;grid-template-columns:190px 1fr;gap:12px;align-items:center;border-bottom:1px solid #cbd5e1;padding:7px 0;min-height:44px}
+.fill-line label{font-weight:700;color:#111827}
+.fill-line small{display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#667085;font-size:12px;line-height:1.35;margin-top:2px}
+.draft-input,.draft-area{width:100%;border:0;background:#fffdf6;border-bottom:1px dashed #94a3b8;padding:7px 8px;border-radius:4px;color:#111827}
+.draft-area{min-height:62px;resize:vertical;line-height:1.45}
+.draft-input:focus,.draft-area:focus{outline:2px solid #fbbf24;background:#fff7ed}
+.draft-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.draft-actions button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer}
+.draft-actions button.primary{background:#10233f;color:#fff;border-color:#10233f}
+.draft-save-state{font-size:13px;color:var(--muted)}
+.draft-sign{display:grid;grid-template-columns:1fr 240px;gap:12px;align-items:end;margin-top:14px}
+.draft-sign-box{border-top:1px solid #111827;text-align:center;padding-top:6px;font-weight:700}
 .cn-note{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:10px}
 .cn-note h4{margin:0 0 8px;font-size:16px}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -143,11 +172,12 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
 .q-title{display:flex;gap:8px;align-items:flex-start}
 .q-title:before{content:"Q";flex:0 0 auto;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#edf4ff;color:#2457a6;font-size:12px;font-weight:850}
 .answer{border-radius:0 8px 8px 0}
-@media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px}.grid,.grid.two,.grid.four,.bill,.split,.image-grid,.edit-lock{grid-template-columns:1fr}.line{grid-template-columns:1fr}}
-@media(max-width:720px){.question-dashboard{grid-template-columns:repeat(2,1fr)}.question-tools{align-items:stretch}.question-tools button{flex:1}.progress-track{flex-basis:100%}}
+@media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px}.grid,.grid.two,.grid.four,.bill,.split,.image-grid,.edit-lock,.bill-stage{grid-template-columns:1fr}.line,.fill-line,.draft-sign{grid-template-columns:1fr}.bill-side-note{position:static}.sample-credit .book-row[data-cn]:hover:after,.sample-credit .book-row[data-cn]:focus-within:after{left:8px;right:8px}}
+@media(max-width:720px){.question-dashboard{grid-template-columns:repeat(2,1fr)}.question-tools{align-items:stretch}.question-tools button{flex:1}.progress-track{flex-basis:100%}.book-row{grid-template-columns:1fr}.book-row .code{text-align:left}.fillable-draft .draft-top{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="credit-tooltip" id="creditTooltip" aria-hidden="true"></div>
 <div id="siteLogin" class="auth-screen">
   <div class="auth-card">
     <h1>国际结算期末复习</h1>
@@ -297,8 +327,9 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
       </div>
     </section>
 
-    <section class="page" id="bill">
+    <section class="page bill-page" id="bill">
       <div class="hero"><h1>填写汇票专项</h1><p>按你发的书上图片格式整理：先用 SWIFT 信用证样本提取字段，再按英文汇票格式填写，并附中文翻译。</p></div>
+      <div class="bill-stage">
       <div class="panel">
         <h3>一、汇票填写字段来源（仿书上 SWIFT 样式）</h3>
         <div class="book-sheet">
@@ -312,34 +343,34 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <div class="book-row"><div class="label">BENEFICIARY</div><div class="code">59:</div><div class="value">通常是汇票出票人和签章人</div></div>
         </div>
         <div class="warn"><b>扣分点：</b>Dated 不是出票日期；To 不要填 applicant；53A 是偿付行，不等于汇票付款人；44C 是最迟装运日，不是付款期限。</div>
-        <h3>二、书上英文信用证样例：字段提取与中文翻译</h3>
-        <div class="note"><b>用法：</b>先从信用证中抓 20、31C、32B、42C、42A、41D、59，再填汇票。下面按你发的书上样例整理，英文保留原格式，中文附在右侧。</div>
-        <div class="book-sheet">
+        <h3>二、书上英文信用证样例：字段提取与中文翻译 <span class="hover-hint">鼠标移到英文行显示中文</span></h3>
+        <div class="note"><b>用法：</b>先从信用证中抓 20、31C、32B、42C、42A、41D、59，再填汇票。下面按你发的书上样例整理，英文保留原格式，中文用悬停提示显示。</div>
+        <div class="book-sheet sample-credit">
           <div class="book-sheet-title">SWIFT SAMPLE CREDIT</div>
-          <div class="book-row"><div class="label">APPLICATION HEADER</div><div class="code"></div><div class="value">SAKURA BANK, LTD., TOKYO</div></div>
-          <div class="book-row"><div class="label">FORM OF DOC. CREDIT</div><div class="code">40A:</div><div class="value">IRREVOCABLE</div></div>
-          <div class="book-row"><div class="label">DOC. CREDIT NUMBER</div><div class="code">20:</div><div class="value">XXXXXX</div></div>
-          <div class="book-row"><div class="label">DATE OF ISSUE</div><div class="code">31C:</div><div class="value">110310</div></div>
-          <div class="book-row"><div class="label">EXPIRY</div><div class="code">31D:</div><div class="value">DATE 110410 PLACE IN THE COUNTRY OF BENEFICIARY</div></div>
-          <div class="book-row block"><div class="label">APPLICANT</div><div class="code">50:</div><div class="value">SEZAM CORP, 46-1, 1-CHOME,<br>YOYOGI, SHIBUYA-KU, TOKYO, JAPAN</div></div>
-          <div class="book-row block"><div class="label">BENEFICIARY</div><div class="code">59:</div><div class="value">SHANGHAI RONGTAI TOYS CO., LTD.<br>NO.165 WU CHAO ROAD, HONG QIAO, SHANGHAI, CHINA</div></div>
-          <div class="book-row"><div class="label">AMOUNT</div><div class="code">32B:</div><div class="value">CURRENCY USD 50000</div></div>
-          <div class="book-row"><div class="label">AVAILABLE WITH/BY</div><div class="code">41D:</div><div class="value">ANY BANK BY NEGOTIATION</div></div>
-          <div class="book-row"><div class="label">DRAFTS AT</div><div class="code">42C:</div><div class="value">DRAFTS AT SIGHT</div></div>
-          <div class="book-row block"><div class="label">DRAWEE</div><div class="code">42A:</div><div class="value">PNBPUS33PHL<br>CORESTATES BANK N. A.<br>PHILADELPHIA, PA</div></div>
-          <div class="book-row"><div class="label">PARTIAL SHIPMENTS</div><div class="code">43P:</div><div class="value">PARTIAL SHIPMENTS ARE NOT ALLOWED</div></div>
-          <div class="book-row"><div class="label">TRANSHIPMENT</div><div class="code">43T:</div><div class="value">TRANSHIPMENT IS NOT ALLOWED</div></div>
-          <div class="book-row"><div class="label">LOADING IN CHARGE</div><div class="code">44A:</div><div class="value">SHANGHAI, CHINA</div></div>
-          <div class="book-row"><div class="label">FOR TRANSPORT TO</div><div class="code">44B:</div><div class="value">YOKOHAMA, JAPAN</div></div>
-          <div class="book-row"><div class="label">LATEST DATE OF SHIP.</div><div class="code">44C:</div><div class="value">110331</div></div>
-          <div class="book-row block"><div class="label">DESCRIPT OF GOODS</div><div class="code">45A:</div><div class="value">STUFFED TOYS<br>TRADE TERM: CIF YOKOHAMA, JAPAN</div></div>
-          <div class="book-row block"><div class="label">ADDITIONAL COND.</div><div class="code">47A:</div><div class="value">INSPECTION CERTIFICATE ISSUED BY SEZAM SHANGHAI OFFICE ARE REQUIRED.<br>T.T. REIMBURSEMENT IS NOT ACCEPTABLE.</div></div>
+          <div class="book-row" data-cn="申请报文头：日本东京樱花银行有限公司，用于识别开证行或报文来源。"><div class="label">APPLICATION HEADER</div><div class="code"></div><div class="value">SAKURA BANK, LTD., TOKYO</div></div>
+          <div class="book-row" data-cn="跟单信用证形式：不可撤销信用证。"><div class="label">FORM OF DOC. CREDIT</div><div class="code">40A:</div><div class="value">IRREVOCABLE</div></div>
+          <div class="book-row" data-cn="信用证号码：XXXXXX。填写汇票 Drawn under L/C No.。"><div class="label">DOC. CREDIT NUMBER</div><div class="code">20:</div><div class="value">XXXXXX</div></div>
+          <div class="book-row" data-cn="开证日期：2011 年 3 月 10 日。填写汇票 Dated，注意不是汇票出票日期。"><div class="label">DATE OF ISSUE</div><div class="code">31C:</div><div class="value">110310</div></div>
+          <div class="book-row" data-cn="有效期：2011 年 4 月 10 日，在受益人所在国家到期。"><div class="label">EXPIRY</div><div class="code">31D:</div><div class="value">DATE 110410 PLACE IN THE COUNTRY OF BENEFICIARY</div></div>
+          <div class="book-row block" data-cn="开证申请人：SEZAM 公司，日本东京涩谷区代代木一丁目 46-1。通常是进口商。"><div class="label">APPLICANT</div><div class="code">50:</div><div class="value">SEZAM CORP, 46-1, 1-CHOME,<br>YOYOGI, SHIBUYA-KU, TOKYO, JAPAN</div></div>
+          <div class="book-row block" data-cn="受益人：上海荣泰玩具有限公司，中国上海市虹桥吴漕路 165 号。通常是汇票出票人。"><div class="label">BENEFICIARY</div><div class="code">59:</div><div class="value">SHANGHAI RONGTAI TOYS CO., LTD.<br>NO.165 WU CHAO ROAD, HONG QIAO, SHANGHAI, CHINA</div></div>
+          <div class="book-row" data-cn="金额：美元 50,000。填写汇票 Exchange for USD 50,000.00。"><div class="label">AMOUNT</div><div class="code">32B:</div><div class="value">CURRENCY USD 50000</div></div>
+          <div class="book-row" data-cn="可用银行及方式：任意银行议付。影响汇票 Pay to the order of 的填写。"><div class="label">AVAILABLE WITH/BY</div><div class="code">41D:</div><div class="value">ANY BANK BY NEGOTIATION</div></div>
+          <div class="book-row" data-cn="汇票期限：即期汇票。填写 At sight。"><div class="label">DRAFTS AT</div><div class="code">42C:</div><div class="value">DRAFTS AT SIGHT</div></div>
+          <div class="book-row block" data-cn="付款人/受票人：美国宾夕法尼亚州费城 CORESTATES BANK N.A.。填写汇票 To 栏。"><div class="label">DRAWEE</div><div class="code">42A:</div><div class="value">PNBPUS33PHL<br>CORESTATES BANK N. A.<br>PHILADELPHIA, PA</div></div>
+          <div class="book-row" data-cn="分批装运：不允许分批装运。"><div class="label">PARTIAL SHIPMENTS</div><div class="code">43P:</div><div class="value">PARTIAL SHIPMENTS ARE NOT ALLOWED</div></div>
+          <div class="book-row" data-cn="转运：不允许转运。"><div class="label">TRANSHIPMENT</div><div class="code">43T:</div><div class="value">TRANSHIPMENT IS NOT ALLOWED</div></div>
+          <div class="book-row" data-cn="装运地：中国上海。"><div class="label">LOADING IN CHARGE</div><div class="code">44A:</div><div class="value">SHANGHAI, CHINA</div></div>
+          <div class="book-row" data-cn="运往地点：日本横滨。"><div class="label">FOR TRANSPORT TO</div><div class="code">44B:</div><div class="value">YOKOHAMA, JAPAN</div></div>
+          <div class="book-row" data-cn="最迟装运日：2011 年 3 月 31 日。不是汇票付款期限。"><div class="label">LATEST DATE OF SHIP.</div><div class="code">44C:</div><div class="value">110331</div></div>
+          <div class="book-row block" data-cn="货物描述：毛绒玩具；贸易术语：CIF 日本横滨。"><div class="label">DESCRIPT OF GOODS</div><div class="code">45A:</div><div class="value">STUFFED TOYS<br>TRADE TERM: CIF YOKOHAMA, JAPAN</div></div>
+          <div class="book-row block" data-cn="附加条件：需要由 SEZAM 上海办事处出具检验证书；不接受电汇偿付。"><div class="label">ADDITIONAL COND.</div><div class="code">47A:</div><div class="value">INSPECTION CERTIFICATE ISSUED BY SEZAM SHANGHAI OFFICE ARE REQUIRED.<br>T.T. REIMBURSEMENT IS NOT ACCEPTABLE.</div></div>
           <div class="book-break"></div>
-          <div class="book-row block"><div class="label">DETAILS OF CHARGES</div><div class="code">71B:</div><div class="value">ALL BANKING CHARGES OUTSIDE JAPAN ARE FOR ACCOUNT OF BENEFICIARY</div></div>
-          <div class="book-row block"><div class="label">PRESENTATION PERIOD</div><div class="code">48:</div><div class="value">DOCUMENTS MUST BE PRESENTED WITHIN 10 DAYS AFTER THE DATE OF SHIPMENT</div></div>
-          <div class="book-row"><div class="label">CONFIRMATION</div><div class="code">49:</div><div class="value">WITHOUT</div></div>
-          <div class="book-row block"><div class="label">REIMBURSEMENT BANK</div><div class="code">53A:</div><div class="value">PNBPUS33PHL<br>CORESTATES BANK N. A.<br>PHILADELPHIA, PA</div></div>
-          <div class="book-row block"><div class="label">DOCUMENTS REQUIRED</div><div class="code">46B:</div><div class="value">SIGNED COMMERCIAL INVOICE IN 3 COPIES;<br>FULL SET OF CLEAN ON BOARD OCEAN B/L;<br>INSURANCE POLICY OR CERTIFICATE;<br>PACKING LIST IN 3 COPIES;<br>INSPECTION CERTIFICATE.</div></div>
+          <div class="book-row block" data-cn="费用详情：日本以外发生的一切银行费用由受益人承担。"><div class="label">DETAILS OF CHARGES</div><div class="code">71B:</div><div class="value">ALL BANKING CHARGES OUTSIDE JAPAN ARE FOR ACCOUNT OF BENEFICIARY</div></div>
+          <div class="book-row block" data-cn="交单期限：单据必须在装运日后 10 天内提交。"><div class="label">PRESENTATION PERIOD</div><div class="code">48:</div><div class="value">DOCUMENTS MUST BE PRESENTED WITHIN 10 DAYS AFTER THE DATE OF SHIPMENT</div></div>
+          <div class="book-row" data-cn="保兑：不保兑。"><div class="label">CONFIRMATION</div><div class="code">49:</div><div class="value">WITHOUT</div></div>
+          <div class="book-row block" data-cn="偿付行：CORESTATES BANK N.A.。注意 53A 是偿付行，42A 才是汇票付款人；本例二者银行相同。"><div class="label">REIMBURSEMENT BANK</div><div class="code">53A:</div><div class="value">PNBPUS33PHL<br>CORESTATES BANK N. A.<br>PHILADELPHIA, PA</div></div>
+          <div class="book-row block" data-cn="所需单据：已签署商业发票一式三份；全套清洁已装船海运提单；保险单或保险凭证；装箱单一式三份；检验证书。"><div class="label">DOCUMENTS REQUIRED</div><div class="code">46B:</div><div class="value">SIGNED COMMERCIAL INVOICE IN 3 COPIES;<br>FULL SET OF CLEAN ON BOARD OCEAN B/L;<br>INSURANCE POLICY OR CERTIFICATE;<br>PACKING LIST IN 3 COPIES;<br>INSPECTION CERTIFICATE.</div></div>
         </div>
         <h3>中文对照明细</h3>
         <table>
@@ -370,7 +401,63 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <tr><td>46B</td><td>SIGNED COMMERCIAL INVOICE IN 3 COPIES; FULL SET OF CLEAN ON BOARD OCEAN B/L...; INSURANCE POLICY OR CERTIFICATE...; PACKING LIST IN 3 COPIES; INSPECTION CERTIFICATE...</td><td>所需单据：已签署商业发票一式三份；全套清洁已装船海运提单；保险单或保险凭证；装箱单一式三份；检验证书。</td></tr>
         </table>
 
-        <h3>三、按书上样例填写的英文汇票</h3>
+        <h3>三、可真实填写的汇票练习</h3>
+        <div class="draft-actions">
+          <button class="primary" type="button" id="loadDraftSample">套用书上样例</button>
+          <button type="button" id="saveDraftPractice">保存填写内容</button>
+          <button type="button" id="clearDraftPractice">清空练习表</button>
+          <span class="draft-save-state" id="draftSaveState">可在下面直接输入，保存后下次打开本机还会保留。</span>
+        </div>
+        <div class="fillable-draft" id="fillableDraft">
+          <div class="draft-top">
+            <div>
+              <label for="draftNo">No.</label>
+              <input class="draft-input" id="draftNo" data-draft-field="no" placeholder="汇票号码" />
+            </div>
+            <div>
+              <input class="draft-input" id="draftPlaceDate" data-draft-field="placeDate" placeholder="Shanghai, Mar. 31, 2011" />
+            </div>
+          </div>
+          <div class="draft-title">Bill of Exchange</div>
+          <div class="fill-line">
+            <label for="draftAmount">Exchange for<small>金额，对应 32B</small></label>
+            <input class="draft-input" id="draftAmount" data-draft-field="amount" placeholder="USD 50,000.00" />
+          </div>
+          <div class="fill-line">
+            <label for="draftTenor">At<small>付款期限，对应 42C</small></label>
+            <input class="draft-input" id="draftTenor" data-draft-field="tenor" placeholder="sight of this FIRST of exchange (Second of exchange being unpaid)" />
+          </div>
+          <div class="fill-line">
+            <label for="draftPayee">Pay to the order of<small>收款人/议付银行，对应 41D</small></label>
+            <input class="draft-input" id="draftPayee" data-draft-field="payee" placeholder="ANY BANK BY NEGOTIATION" />
+          </div>
+          <div class="fill-line">
+            <label for="draftLcNo">Drawn under L/C No.<small>信用证号码，对应 20</small></label>
+            <input class="draft-input" id="draftLcNo" data-draft-field="lcNo" placeholder="XXXXXX" />
+          </div>
+          <div class="fill-line">
+            <label for="draftLcDate">Dated<small>信用证开证日期，对应 31C</small></label>
+            <input class="draft-input" id="draftLcDate" data-draft-field="lcDate" placeholder="Mar. 10, 2011" />
+          </div>
+          <div class="fill-line">
+            <label for="draftIssuedBy">Issued by<small>开证行</small></label>
+            <input class="draft-input" id="draftIssuedBy" data-draft-field="issuedBy" placeholder="SAKURA BANK, LTD., TOKYO" />
+          </div>
+          <div class="fill-line">
+            <label for="draftDrawee">To<small>付款人/受票人，对应 42A</small></label>
+            <textarea class="draft-area" id="draftDrawee" data-draft-field="drawee" placeholder="CORESTATES BANK N. A.&#10;PHILADELPHIA, PA, U.S.A."></textarea>
+          </div>
+          <div class="fill-line">
+            <label for="draftDrawer">Drawer<small>出票人，通常为受益人 59</small></label>
+            <textarea class="draft-area" id="draftDrawer" data-draft-field="drawer" placeholder="SHANGHAI RONGTAI TOYS CO., LTD."></textarea>
+          </div>
+          <div class="draft-sign">
+            <div></div>
+            <div class="draft-sign-box">AUTHORIZED SIGNATURE</div>
+          </div>
+        </div>
+
+        <h3>四、按书上样例填写的英文汇票</h3>
         <div class="draft-box">
           <div class="draft-title">Bill of Exchange</div>
           <div class="draft-line"><div class="name">No.</div><div class="value">__________ <span style="float:right">Shanghai, Mar. 31, 2011</span></div></div>
@@ -395,7 +482,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <p><b>Drawer</b>：出票人为受益人上海荣泰玩具有限公司，对应 59。</p>
         </div>
 
-        <h3>中文翻译版汇票</h3>
+        <h3>五、中文翻译版汇票</h3>
         <table>
           <tr><th>英文栏位</th><th>中文意思</th><th>本例填写</th></tr>
           <tr><td>No.</td><td>汇票号码</td><td>题图未给，可按实际业务编号填写；示例留空。</td></tr>
@@ -410,6 +497,18 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <tr><td>SHANGHAI RONGTAI TOYS CO., LTD.</td><td>出票人</td><td>上海荣泰玩具有限公司，即受益人 59。</td></tr>
         </table>
         <div class="warn"><b>这道样例最容易错：</b>42A 和 53A 本例银行相同，但概念不同；42A 才是汇票 To 栏付款人。31C 才填 Dated；31D 是信用证有效期，不填 Dated。44C 是最迟装运日，不是出票日期，也不是付款期限。</div>
+      </div>
+      <aside class="bill-side-note">
+        <h3>汇票填写顺序</h3>
+        <ol>
+          <li>先找 32B，填金额。</li>
+          <li>再找 42C，填 At 期限。</li>
+          <li>找 41D，填 Pay to the order of。</li>
+          <li>找 20 和 31C，填 L/C No. 与 Dated。</li>
+          <li>找 42A，填 To 付款人。</li>
+          <li>找 59，填 Drawer 出票人。</li>
+        </ol>
+      </aside>
       </div>
     </section>
 
@@ -527,6 +626,93 @@ nav.forEach(btn=>btn.addEventListener('click',()=>{
   pages.forEach(p=>p.classList.toggle('active',p.id===btn.dataset.page));
   window.scrollTo(0,0);
 }));
+
+const draftPracticeKey='intlSettlementDraftPractice:v1';
+const draftSample={
+  no:'',
+  placeDate:'Shanghai, Mar. 31, 2011',
+  amount:'USD 50,000.00',
+  tenor:'sight of this FIRST of exchange (Second of exchange being unpaid)',
+  payee:'ANY BANK BY NEGOTIATION',
+  lcNo:'XXXXXX',
+  lcDate:'Mar. 10, 2011',
+  issuedBy:'SAKURA BANK, LTD., TOKYO',
+  drawee:'CORESTATES BANK N. A.\nPHILADELPHIA, PA, U.S.A.',
+  drawer:'SHANGHAI RONGTAI TOYS CO., LTD.'
+};
+function draftFields(){
+  return [...document.querySelectorAll('[data-draft-field]')];
+}
+function setDraftState(text){
+  const state=document.querySelector('#draftSaveState');
+  if(state) state.textContent=text;
+}
+function collectDraft(){
+  return Object.fromEntries(draftFields().map(field=>[field.dataset.draftField,field.value]));
+}
+function fillDraft(data){
+  draftFields().forEach(field=>{
+    field.value=data[field.dataset.draftField] || '';
+  });
+}
+function saveDraftPractice(){
+  localStorage.setItem(draftPracticeKey, JSON.stringify(collectDraft()));
+  setDraftState('已保存本次填写内容');
+}
+function initDraftPractice(){
+  const saved=localStorage.getItem(draftPracticeKey);
+  if(saved){
+    try{
+      fillDraft(JSON.parse(saved));
+      setDraftState('已读取上次保存的填写内容');
+    }catch(error){
+      console.error(error);
+    }
+  }
+  document.querySelector('#loadDraftSample')?.addEventListener('click',()=>{
+    fillDraft(draftSample);
+    setDraftState('已套用书上样例，可以继续修改');
+  });
+  document.querySelector('#saveDraftPractice')?.addEventListener('click',saveDraftPractice);
+  document.querySelector('#clearDraftPractice')?.addEventListener('click',()=>{
+    fillDraft({});
+    localStorage.removeItem(draftPracticeKey);
+    setDraftState('已清空练习表');
+  });
+  draftFields().forEach(field=>field.addEventListener('input',()=>{
+    setDraftState('有未保存的填写内容');
+  }));
+}
+initDraftPractice();
+
+function initCreditTooltip(){
+  const tooltip=document.querySelector('#creditTooltip');
+  const rows=[...document.querySelectorAll('.sample-credit .book-row[data-cn]')];
+  if(!tooltip || rows.length===0) return;
+  function show(row){
+    tooltip.textContent=row.dataset.cn;
+    tooltip.classList.add('show');
+    tooltip.setAttribute('aria-hidden','false');
+    const rect=row.getBoundingClientRect();
+    const top=Math.min(window.innerHeight-24, Math.max(12, rect.bottom + 8));
+    const left=Math.min(window.innerWidth-tooltip.offsetWidth-14, Math.max(14, rect.left + 290));
+    tooltip.style.top=top+'px';
+    tooltip.style.left=left+'px';
+  }
+  function hide(){
+    tooltip.classList.remove('show');
+    tooltip.setAttribute('aria-hidden','true');
+  }
+  rows.forEach(row=>{
+    row.tabIndex=0;
+    row.addEventListener('mouseenter',()=>show(row));
+    row.addEventListener('focus',()=>show(row));
+    row.addEventListener('mouseleave',hide);
+    row.addEventListener('blur',hide);
+  });
+  window.addEventListener('scroll',hide,{passive:true});
+}
+initCreditTooltip();
 
 const knowledgeStorePrefix='intlSettlementKnowledge:v1:';
 const supabaseUrl='https://eytgjgajktedzetcwcuw.supabase.co';
