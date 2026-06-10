@@ -112,7 +112,39 @@ th{background:#eef3f8;text-align:left}
 .save-status{font-size:13px;color:var(--muted);align-self:center}
 .hidden{display:none!important}
 mark{background:#fff1a6;border-radius:3px;padding:0 2px}
+.shell{background:linear-gradient(135deg,#f6f8fb 0%,#eef4fb 45%,#f8fafc 100%)}
+.side{background:linear-gradient(180deg,#0f223a 0%,#1c385d 58%,#173256 100%);box-shadow:12px 0 32px rgba(15,34,58,.16)}
+.brand{letter-spacing:.02em}
+.nav button{min-height:46px;font-weight:720;transition:background .16s ease, color .16s ease, transform .16s ease}
+.nav button:hover{transform:translateX(2px)}
+.nav button.active{box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.main{padding:26px}
+.hero{position:relative;overflow:hidden;border:1px solid #dbe7f4;background:linear-gradient(135deg,#ffffff 0%,#f7fbff 58%,#eef7ff 100%)}
+.hero:after{content:"";position:absolute;right:-70px;top:-90px;width:230px;height:230px;border-radius:50%;background:rgba(36,87,166,.08);pointer-events:none}
+.panel,.card,.q{border-color:#dce6f2;box-shadow:0 14px 34px rgba(15,35,63,.07)}
+.metric{background:linear-gradient(135deg,#10233f,#2457a6);box-shadow:0 12px 26px rgba(16,35,63,.16)}
+.tabs{background:#eef4fb;border:1px solid #d8e5f2;border-radius:8px;padding:6px;width:max-content;max-width:100%}
+.tabs button{background:transparent;border-color:transparent;font-weight:720}
+.tabs button.active{box-shadow:0 8px 18px rgba(16,35,63,.14)}
+.question-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.qstat{background:#f8fbff;border:1px solid #dbe7f4;border-radius:8px;padding:11px 12px}
+.qstat b{display:block;font-size:22px;line-height:1.1;color:#10233f}
+.qstat span{font-size:12px;color:var(--muted)}
+.question-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+.question-tools button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer}
+.question-tools button.primary{background:#10233f;color:#fff;border-color:#10233f}
+.progress-track{height:9px;background:#e5edf6;border-radius:999px;overflow:hidden;flex:1;min-width:180px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#087443,#22c55e);transition:width .18s ease}
+.progress-text{font-size:13px;color:var(--muted)}
+.q{transition:border-color .16s ease, transform .16s ease}
+.q:hover{border-color:#bfdbfe}
+.q.answered{border-color:#bbf7d0}
+.q.is-random-pick{border-color:#f59e0b;background:#fffaf2}
+.q-title{display:flex;gap:8px;align-items:flex-start}
+.q-title:before{content:"Q";flex:0 0 auto;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#edf4ff;color:#2457a6;font-size:12px;font-weight:850}
+.answer{border-radius:0 8px 8px 0}
 @media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px}.grid,.grid.two,.grid.four,.bill,.split,.image-grid,.edit-lock{grid-template-columns:1fr}.line{grid-template-columns:1fr}}
+@media(max-width:720px){.question-dashboard{grid-template-columns:repeat(2,1fr)}.question-tools{align-items:stretch}.question-tools button{flex:1}.progress-track{flex-basis:100%}}
 </style>
 </head>
 <body>
@@ -153,8 +185,8 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
       <div class="grid four" style="margin-top:14px">
         <div class="metric"><b>4类题型</b><span>选择、判断、简答、业务题</span></div>
         <div class="metric"><b>全部知识点</b><span>按老师复习完整版逐条覆盖</span></div>
-        <div class="metric"><b>34道题</b><span>选择、判断、简答、业务题</span></div>
-        <div class="metric"><b>1个重点专项</b><span>填写汇票单独训练</span></div>
+        <div class="metric"><b id="totalQuestionMetric">56道题</b><span>选择、判断、简答、业务题</span></div>
+        <div class="metric"><b>云端同步</b><span>管理员编辑，普通账号查看</span></div>
       </div>
       <div class="panel">
         <h2>复习顺序</h2>
@@ -434,6 +466,19 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
     <section class="page" id="questions">
       <div class="hero"><h1>题库练习</h1><p>新增选择题、判断题、简答题和业务题。选择题点选后会直接标出对错；其他题点“显示答案”。</p></div>
       <div class="panel">
+        <div class="question-dashboard">
+          <div class="qstat"><b id="qTotal">0</b><span>题库总题数</span></div>
+          <div class="qstat"><b id="qDone">0</b><span>已练习</span></div>
+          <div class="qstat"><b id="qCorrect">0</b><span>客观题正确</span></div>
+          <div class="qstat"><b id="qRate">0%</b><span>完成进度</span></div>
+        </div>
+        <div class="question-tools">
+          <button id="randomPractice" class="primary" type="button">随机10题</button>
+          <button id="showAllAnswers" type="button">显示本页答案</button>
+          <button id="resetPractice" type="button">重置练习</button>
+          <div class="progress-track"><div class="progress-fill" id="qProgress"></div></div>
+          <span class="progress-text" id="qProgressText">还未开始练习</span>
+        </div>
         <div class="tabs" id="qtabs">
           <button class="active" data-q="choice">选择题</button>
           <button data-q="judge">判断题</button>
@@ -760,7 +805,15 @@ choice:[
 ['信用证审单中“纵审”主要看什么？',['单单一致','单证一致','货物质量','买方资信'],1,'纵审看单据与信用证是否一致。'],
 ['票据流通中善意支付对价取得完整权利，属于哪种转让？',['过户','交付','流通','退票'],2,'流通区别于普通交付和过户。'],
 ['本票与汇票的主要区别之一是？',['本票是支付承诺，汇票是支付命令','本票必须有三个基本当事人','汇票没有付款人','支票不是票据'],0,'本票通常 2 个基本当事人，汇票 3 个。'],
-['信用证 46B 表示什么？',['费用承担','单据要求','转运许可','偿付行'],1,'46B = Documents required。']
+['信用证 46B 表示什么？',['费用承担','单据要求','转运许可','偿付行'],1,'46B = Documents required。'],
+['信用证 71B 主要表示什么？',['费用承担','货物描述','开证日期','通知行'],0,'71B 是 Details of Charges，表示费用由谁承担。'],
+['信用证 44A 与 44B 通常分别表示什么？',['装运地与目的地','申请人与受益人','金额与币种','议付行与偿付行'],0,'44A 是装运地/装运港，44B 是目的地/目的港。'],
+['汇票 “Pay to the order of” 后应填写什么？',['出票人','收款人或议付银行','开证申请人','承运人'],1,'该栏表示收款人，信用证样例中常按可用银行或指定银行填写。'],
+['保险单据按 CIF 金额 110% 投保时，主要对应哪类单据要求？',['商业发票','保险单或保险凭证','装箱单','提单'],1,'CIF 条件下通常要求保险单/保险凭证，并常按发票金额 110% 投保。'],
+['“单单一致”对应哪种审单方法？',['纵审','横审','追索','承兑'],1,'横审检查各单据之间是否一致。'],
+['支票的付款人通常是？',['银行','出口商','承运人','保险公司'],0,'支票一般以银行或办理支票存款业务的金融机构为付款人。'],
+['托收业务中 D/P at sight 表示什么？',['即期付款交单','远期付款交单','承兑交单','票汇'],0,'D/P at sight 是即期付款后交单。'],
+['“All Risks” 的中文通常是？',['平安险','水渍险','一切险','战争险'],2,'All Risks 对应一切险，但并非所有损失都赔。']
 ],
 judge:[
 ['托收方式下，银行保证进口商一定付款。',false,'托收以商业信用为基础，银行只是代收和交单。'],
@@ -772,7 +825,13 @@ judge:[
 ['53A 是偿付行，不能直接等同于汇票付款人。',true,'汇票付款人通常看 42A。'],
 ['FPA、WPA/WA、All Risks 都属于主险中英文记忆范围。',true,'对应平安险、水渍险、一切险。'],
 ['信汇的英文缩写是 T/T。',false,'信汇是 M/T；T/T 是电汇。'],
-['福费廷通常强调无追索权买断。',true,'这是与一般贴现比较的重点。']
+['福费廷通常强调无追索权买断。',true,'这是与一般贴现比较的重点。'],
+['41D 表示信用证可用银行及方式。',true,'41D 常见表达为 available with/by。'],
+['43P 表示是否允许分批装运。',true,'43P 是 Partial Shipments。'],
+['43T 表示是否允许转运。',true,'43T 是 Transshipment。'],
+['44C 是交单期限。',false,'44C 是最迟装运日；48 才是交单期限。'],
+['商业发票只用于报关，不作为银行审单依据。',false,'商业发票是银行审单、付款、报关、索赔的重要依据。'],
+['正当持票人通常要求善意、支付对价并取得表面合格票据。',true,'这是 holder in due course 的核心判断条件。']
 ],
 short:[
 ['简述信用证的特点。','信用证具有银行信用、独立性和单据交易原则。银行按信用证条款和单据表面相符承担付款、承兑或议付责任；信用证独立于买卖合同；银行处理单据而不是货物。'],
@@ -780,7 +839,11 @@ short:[
 ['简述海运提单的作用。','海运提单是承运人收到货物的收据，是运输合同的证明，也是物权凭证。信用证项下常用它证明装运事实和提货权利。'],
 ['简述托收风险及防范。','托收以商业信用为基础，银行不保证付款。风险包括进口商拒付或拒绝承兑、市场价格变化、货物滞港和处理困难。防范可通过调查资信、选择 D/P、控制单据、投保和明确合同条款。'],
 ['简述福费廷与一般贴现的区别。','福费廷通常是无追索权买断远期债权或票据，风险转移较彻底，期限较长、费用较高；一般贴现通常以票据为对象，银行扣息后给付净款，很多情况下仍保留追索权。'],
-['简述商业单据的作用。','商业单据用于证明交易履行、货物装运、运输、保险、金额和数量等事实，是付款、审单、提货、索赔和结算的重要依据。']
+['简述商业单据的作用。','商业单据用于证明交易履行、货物装运、运输、保险、金额和数量等事实，是付款、审单、提货、索赔和结算的重要依据。'],
+['简述 D/P 远期与 D/A 的区别。','D/P 远期中进口商可以先承兑远期汇票，但代收行不立即交单，必须到期付款后交单；D/A 中进口商承兑后即可取得单据，到期再付款，因此出口商风险更高。'],
+['简述信用证审单中的横审和纵审。','纵审是把每份单据同信用证条款逐项核对，检查单证一致；横审是把各份单据之间相互核对，检查单单一致。答题可写先纵审再横审，发现不符点及时处理。'],
+['简述海上货物运输保险三种主险。','平安险 FPA、 水渍险 WPA/WA、 一切险 All Risks。保障范围由窄到宽，但一切险并不等于任何损失都赔，仍受除外责任限制。'],
+['简述账户行和代理行的区别。','代理行强调银行之间受托办理业务的关系，不一定互开账户；账户行是在代理关系基础上开立账户并进行资金清算的银行，重点在账务清算功能。']
 ],
 business:[
 ['填写汇票关键栏位：信用证 20 为 LC2026-8899，31C 为 May 10, 2026，32B 为 USD 80,000.00，42C 为 30 days after sight，42A 为 ABC BANK, NEW YORK，59 为 SHANGHAI EXPORT CO., LTD.，41D 为 available with Bank of China Shanghai Branch by negotiation。','Exchange for USD 80,000.00；At 30 days after sight；Pay to the order of Bank of China Shanghai Branch；Drawn under L/C No. LC2026-8899；Dated May 10, 2026；Issued by ABC BANK, NEW YORK；To ABC BANK, NEW YORK；出票人为 SHANGHAI EXPORT CO., LTD.。'],
@@ -788,41 +851,116 @@ business:[
 ['贴现计算：6个月期汇票，面值60000元，无票面利率，过了4个月后提前2个月贴现，贴现率12%。','到期价值=60000；贴现利息=60000×12%×2/12=1200；贴现净款=58800；实际贴现利率=1200/58800×12/2=12.24%。'],
 ['判断交单方式：进口商承兑远期汇票后，代收行立即把货运单据交给进口商，进口商到期再付款。','这是 D/A 承兑交单。关键是承兑后立即交单；如果到期付款后才交单才是 D/P 远期。'],
 ['信用证日期判断：31D 为 June 30, 2026，44C 为 June 10, 2026，48 为 within 15 days after shipment。货物 June 12 装运，June 20 交单。','June 12 晚于最迟装运日 June 10，构成装运期不符；June 20 距装运日 8 天，未超过 15 天交单期，且未超过有效期 June 30。'],
-['识别信用证项目：题目要求找金额、汇票付款人、最迟装运日、交单期限、单据要求。','金额看 32B；汇票付款人看 42A；最迟装运日看 44C；交单期限看 48；单据要求看 46B。']
+['识别信用证项目：题目要求找金额、汇票付款人、最迟装运日、交单期限、单据要求。','金额看 32B；汇票付款人看 42A；最迟装运日看 44C；交单期限看 48；单据要求看 46B。'],
+['信用证字段判断：43P 写 PARTIAL SHIPMENTS ARE NOT ALLOWED，43T 写 TRANSSHIPMENT IS ALLOWED。问能否分批、能否转运。','不能分批装运；可以转运。43P 判断分批装运，43T 判断转运。'],
+['费用承担判断：71B 写 ALL BANKING CHARGES OUTSIDE JAPAN ARE FOR ACCOUNT OF BENEFICIARY。问日本以外银行费用由谁承担。','由受益人承担。71B 是费用详情，outside Japan 指日本以外发生的银行费用。'],
+['保险金额判断：CIF 发票金额 USD 50,000，信用证要求按 CIF 发票金额 110% 投保。应投保多少？','保险金额 = 50,000 × 110% = USD 55,000。'],
+['交单期限判断：装运日为 3 月 20 日，48 写 documents must be presented within 10 days after shipment，实际 4 月 2 日交单。是否符合？','不符合。3 月 20 日后 10 天内应交单，4 月 2 日已超过 10 天，构成交单期不符。']
 ]
 };
 
+const questionState={answered:new Set(),correct:new Set(),active:'choice',randomOnly:false};
+function questionTotal(){
+  return Object.values(questionData).reduce((sum,list)=>sum+list.length,0);
+}
+function questionId(type,index){
+  return `${type}-${index}`;
+}
+function updateQuestionStats(){
+  const total=questionTotal();
+  const done=questionState.answered.size;
+  const rate=total ? Math.round(done/total*100) : 0;
+  document.querySelector('#qTotal').textContent=total;
+  document.querySelector('#qDone').textContent=done;
+  document.querySelector('#qCorrect').textContent=questionState.correct.size;
+  document.querySelector('#qRate').textContent=rate+'%';
+  document.querySelector('#qProgress').style.width=rate+'%';
+  document.querySelector('#qProgressText').textContent=done ? `已练习 ${done}/${total} 题` : '还未开始练习';
+  const metric=document.querySelector('#totalQuestionMetric');
+  if(metric) metric.textContent=total+'道题';
+}
 function renderQuestions(){
   renderChoice();
   renderJudge();
   renderSimple('short');
   renderSimple('business');
+  updateQuestionStats();
 }
 function renderChoice(){
   const root=document.querySelector('#choice');
-  root.innerHTML=questionData.choice.map((q,i)=>`<div class="q" data-answer="${q[2]}"><div class="q-title">${i+1}. ${q[0]}</div><div class="options">${q[1].map((o,j)=>`<button data-index="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="answer">${q[3]}</div></div>`).join('');
+  root.innerHTML=questionData.choice.map((q,i)=>`<div class="q" data-type="choice" data-id="${questionId('choice',i)}" data-answer="${q[2]}"><div class="q-title">${i+1}. ${q[0]}</div><div class="options">${q[1].map((o,j)=>`<button data-index="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="answer">${q[3]}</div></div>`).join('');
 }
 function renderJudge(){
   const root=document.querySelector('#judge');
-  root.innerHTML=questionData.judge.map((q,i)=>`<div class="q" data-answer="${q[1]}"><div class="q-title">${i+1}. ${q[0]}</div><div class="options"><button data-index="true">正确</button><button data-index="false">错误</button></div><div class="answer">${q[2]}</div></div>`).join('');
+  root.innerHTML=questionData.judge.map((q,i)=>`<div class="q" data-type="judge" data-id="${questionId('judge',i)}" data-answer="${q[1]}"><div class="q-title">${i+1}. ${q[0]}</div><div class="options"><button data-index="true">正确</button><button data-index="false">错误</button></div><div class="answer">${q[2]}</div></div>`).join('');
 }
 function renderSimple(id){
   const root=document.querySelector('#'+id);
-  root.innerHTML=questionData[id].map((q,i)=>`<div class="q"><div class="q-title">${i+1}. ${q[0]}</div><button class="toggle-answer">显示答案</button><div class="answer">${q[1]}</div></div>`).join('');
+  root.innerHTML=questionData[id].map((q,i)=>`<div class="q" data-type="${id}" data-id="${questionId(id,i)}"><div class="q-title">${i+1}. ${q[0]}</div><button class="toggle-answer">显示答案</button><div class="answer">${q[1]}</div></div>`).join('');
 }
 renderQuestions();
-document.querySelectorAll('.options button').forEach(btn=>btn.addEventListener('click',()=>{
-  const q=btn.closest('.q'); const ans=String(q.dataset.answer);
-  q.querySelectorAll('.options button').forEach(b=>b.classList.remove('correct','wrong'));
-  const ok=String(btn.dataset.index)===ans;
-  btn.classList.add(ok?'correct':'wrong');
-  q.querySelectorAll('.options button').forEach(b=>{if(String(b.dataset.index)===ans)b.classList.add('correct')});
-  q.classList.add('open');
-}));
-document.querySelectorAll('.toggle-answer').forEach(btn=>btn.addEventListener('click',()=>btn.closest('.q').classList.toggle('open')));
+document.querySelector('#questions').addEventListener('click',event=>{
+  const option=event.target.closest('.options button');
+  if(option){
+    const q=option.closest('.q'); const ans=String(q.dataset.answer);
+    q.querySelectorAll('.options button').forEach(b=>b.classList.remove('correct','wrong'));
+    const ok=String(option.dataset.index)===ans;
+    option.classList.add(ok?'correct':'wrong');
+    q.querySelectorAll('.options button').forEach(b=>{if(String(b.dataset.index)===ans)b.classList.add('correct')});
+    q.classList.add('open','answered');
+    questionState.answered.add(q.dataset.id);
+    if(ok) questionState.correct.add(q.dataset.id);
+    else questionState.correct.delete(q.dataset.id);
+    updateQuestionStats();
+    return;
+  }
+  const toggle=event.target.closest('.toggle-answer');
+  if(toggle){
+    const q=toggle.closest('.q');
+    q.classList.toggle('open');
+    q.classList.add('answered');
+    questionState.answered.add(q.dataset.id);
+    updateQuestionStats();
+  }
+});
+document.querySelector('#randomPractice').addEventListener('click',()=>{
+  const current=document.querySelector('.question-set.active');
+  const questions=[...current.querySelectorAll('.q')];
+  questions.forEach(q=>q.classList.remove('is-random-pick','hidden'));
+  const picks=[...questions].sort(()=>Math.random()-.5).slice(0,Math.min(10,questions.length));
+  questions.forEach(q=>q.classList.toggle('hidden',!picks.includes(q)));
+  picks.forEach(q=>q.classList.add('is-random-pick'));
+  questionState.randomOnly=true;
+  document.querySelector('#qProgressText').textContent=`已随机抽取 ${picks.length} 题`;
+});
+document.querySelector('#showAllAnswers').addEventListener('click',()=>{
+  const current=document.querySelector('.question-set.active');
+  current.querySelectorAll('.q').forEach(q=>{
+    q.classList.add('open','answered');
+    questionState.answered.add(q.dataset.id);
+    const ans=String(q.dataset.answer);
+    if(ans!=='undefined'){
+      q.querySelectorAll('.options button').forEach(b=>{if(String(b.dataset.index)===ans)b.classList.add('correct')});
+    }
+  });
+  updateQuestionStats();
+});
+document.querySelector('#resetPractice').addEventListener('click',()=>{
+  questionState.answered.clear();
+  questionState.correct.clear();
+  questionState.randomOnly=false;
+  document.querySelectorAll('.q').forEach(q=>{
+    q.classList.remove('open','answered','is-random-pick','hidden');
+    q.querySelectorAll('.options button').forEach(b=>b.classList.remove('correct','wrong'));
+  });
+  updateQuestionStats();
+});
 document.querySelectorAll('#qtabs button').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('#qtabs button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
   document.querySelectorAll('.question-set').forEach(s=>s.classList.toggle('active',s.id===btn.dataset.q));
+  document.querySelectorAll('.question-set.active .q').forEach(q=>q.classList.remove('hidden','is-random-pick'));
+  questionState.active=btn.dataset.q;
+  questionState.randomOnly=false;
 }));
 </script>
 </body>
