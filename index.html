@@ -183,7 +183,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
     <h1>国际结算期末复习</h1>
     <p>请输入账号密码进入复习网页。</p>
     <div class="auth-form">
-      <input id="siteUser" type="text" placeholder="邮箱账号" autocomplete="username" />
+      <input id="siteUser" type="text" placeholder="账号或邮箱" autocomplete="username" />
       <input id="sitePassword" type="password" placeholder="密码" autocomplete="current-password" />
       <button id="siteLoginButton" type="button">进入网页</button>
       <span id="siteLoginState" class="auth-state"></span>
@@ -740,6 +740,11 @@ const siteRoleSessionKey='intlSettlementSiteRole';
 const authSessionKey='intlSettlementAuthSession';
 const siteSessionVersionKey='intlSettlementSessionVersion';
 const siteSessionVersion='3';
+const authEmailMap={
+  admin:'admin@gjjs.example.com',
+  gjjs:'editor@gjjs.example.com',
+  student:'student@gjjs.example.com'
+};
 if(sessionStorage.getItem(siteSessionVersionKey)!==siteSessionVersion){
   sessionStorage.removeItem(siteSessionKey);
   sessionStorage.removeItem(siteRoleSessionKey);
@@ -783,13 +788,15 @@ async function supabaseRequest(path, options={}){
   return text ? JSON.parse(text) : null;
 }
 async function supabaseAuthLogin(email, password){
+  const normalized=email.trim();
+  const loginEmail=authEmailMap[normalized] || normalized;
   const response=await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`,{
     method:'POST',
     headers:{
       apikey:supabaseAnonKey,
       'Content-Type':'application/json'
     },
-    body:JSON.stringify({email,password})
+    body:JSON.stringify({email:loginEmail,password})
   });
   if(!response.ok){
     throw new Error(await response.text() || 'login failed');
