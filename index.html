@@ -828,7 +828,7 @@ function setLoginLogVisibility(){
   const panel=document.querySelector('#loginLogPanel');
   if(panel) panel.hidden=!canViewLoginLogs();
 }
-function setKnowledgeEditMode(){
+function setKnowledgeEditMode(options={}){
   const editable=canEditKnowledge();
   document.querySelectorAll('.knowledge-list .editable-cell').forEach(cell=>{
     cell.contentEditable=editable?'true':'false';
@@ -837,10 +837,12 @@ function setKnowledgeEditMode(){
   document.querySelectorAll('.save-one,.delete-one,.add-knowledge-row,#saveAllKnowledge').forEach(btn=>{
     btn.disabled=!editable;
   });
-  if(!siteUnlocked) setKnowledgeStatus('请先登录网页');
-  else if(siteRole==='admin') setKnowledgeStatus('真正管理员模式：可修改知识点，并可查看登录记录');
-  else if(editable) setKnowledgeStatus('知识点编辑账号：可单独修改并保存知识点');
-  else setKnowledgeStatus('普通账号：只能查看，不能编辑保存');
+  if(!options.preserveStatus){
+    if(!siteUnlocked) setKnowledgeStatus('请先登录网页');
+    else if(siteRole==='admin') setKnowledgeStatus('真正管理员模式：可修改知识点，并可查看登录记录');
+    else if(editable) setKnowledgeStatus('知识点编辑账号：可单独修改并保存知识点');
+    else setKnowledgeStatus('普通账号：只能查看，不能编辑保存');
+  }
   setLoginLogVisibility();
 }
 function setCloudReadyStatus(prefix=''){
@@ -925,6 +927,13 @@ async function upsertKnowledgeItems(items){
     headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
     body:JSON.stringify(items)
   });
+}
+async function upsertKnowledgeItemsInBatches(items, batchSize=15, onProgress=()=>{}){
+  for(let start=0; start<items.length; start+=batchSize){
+    const batch=items.slice(start,start+batchSize);
+    await upsertKnowledgeItems(batch);
+    onProgress(Math.min(start+batch.length, items.length), items.length);
+  }
 }
 function loginDeviceInfo(){
   const ua=navigator.userAgent || 'unknown';
@@ -1011,7 +1020,7 @@ async function loadCloudKnowledge(options={}){
       table.appendChild(row);
       prepareKnowledgeRow(row);
     });
-    setKnowledgeEditMode();
+    setKnowledgeEditMode({preserveStatus:options.quiet});
     if(!options.quiet) setCloudReadyStatus('已读取云端最新知识点');
   }catch(error){
     console.error(error);
@@ -1143,17 +1152,21 @@ async function saveAllKnowledge(){
   if(!requireKnowledgeEdit()) return;
   const button=document.querySelector('#saveAllKnowledge');
   const rows=[...document.querySelectorAll('.knowledge-list tr[data-edit-ready="1"]')];
+  const payloads=rows.map(row=>knowledgePayload(row));
   button.disabled=true;
   button.textContent='保存中';
-  setKnowledgeStatus('正在保存全部知识点到云端...');
+  setKnowledgeStatus(`正在保存全部知识点到云端：0/${rows.length}`);
   try{
-    rows.forEach(row=>localStorage.setItem(row.dataset.key, JSON.stringify(knowledgePayload(row))));
-    await upsertKnowledgeItems(rows.map(row=>knowledgePayload(row)));
+    rows.forEach((row,index)=>localStorage.setItem(row.dataset.key, JSON.stringify(payloads[index])));
+    await upsertKnowledgeItemsInBatches(payloads,15,(done,total)=>{
+      setKnowledgeStatus(`正在保存全部知识点到云端：${done}/${total}`);
+    });
     rows.forEach(row=>row.dataset.dirty='0');
     setKnowledgeStatus('全部知识点已保存到云端');
   }catch(error){
     console.error(error);
-    setKnowledgeStatus('全部保存失败，请检查网络后重试');
+    const message=String(error?.message || error || '').slice(0,180);
+    setKnowledgeStatus(`全部保存失败：${message || '请检查网络后重试'}`);
   }finally{
     button.disabled=false;
     button.textContent='保存全部';
