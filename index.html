@@ -183,7 +183,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
     <h1>国际结算期末复习</h1>
     <p>请输入账号密码进入复习网页。</p>
     <div class="auth-form">
-      <input id="siteUser" type="text" placeholder="账号" autocomplete="username" />
+      <input id="siteUser" type="text" placeholder="邮箱账号" autocomplete="username" />
       <input id="sitePassword" type="password" placeholder="密码" autocomplete="current-password" />
       <button id="siteLoginButton" type="button">进入网页</button>
       <span id="siteLoginState" class="auth-state"></span>
@@ -226,6 +226,19 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <tr><td>2</td><td>填写汇票</td><td>把信用证 20、31C、32B、42A、42C 等字段迁移到汇票。</td></tr>
           <tr><td>3</td><td>信用证与流程</td><td>背 T/T、D/D、D/P 远期、D/A、信用证 10 步流程。</td></tr>
           <tr><td>4</td><td>题库练习</td><td>选择题和判断题查漏，简答题背答题口径，业务题练步骤。</td></tr>
+        </table>
+      </div>
+      <div class="panel" id="loginLogPanel" hidden>
+        <h2>登录记录</h2>
+        <div class="question-tools">
+          <button type="button" class="primary" id="refreshLoginLogs">刷新记录</button>
+          <span class="save-status" id="loginLogStatus">仅真正管理员可查看。</span>
+        </div>
+        <table>
+          <tr><th>时间</th><th>账号类型</th><th>IP</th><th>设备信息</th></tr>
+          <tbody id="loginLogBody">
+            <tr><td colspan="4">暂无记录</td></tr>
+          </tbody>
         </table>
       </div>
     </section>
@@ -722,23 +735,36 @@ initCreditTooltip();
 const knowledgeStorePrefix='intlSettlementKnowledge:v1:';
 const supabaseUrl='https://eytgjgajktedzetcwcuw.supabase.co';
 const supabaseAnonKey='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5dGdqZ2Fqa3RlZHpldGN3Y3V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NzgzMjgsImV4cCI6MjA5NjU1NDMyOH0.OglhO3l8Sz0FwGU5FG4qVp9OzZ_DrJzPAO77TmCTk1o';
-const adminAccount='gjjs';
-const adminPassword='gjjs2026';
-const viewerAccount='student';
-const viewerPassword='review123';
 const siteSessionKey='intlSettlementSiteUnlocked';
 const siteRoleSessionKey='intlSettlementSiteRole';
+const authSessionKey='intlSettlementAuthSession';
+const siteSessionVersionKey='intlSettlementSessionVersion';
+const siteSessionVersion='3';
+if(sessionStorage.getItem(siteSessionVersionKey)!==siteSessionVersion){
+  sessionStorage.removeItem(siteSessionKey);
+  sessionStorage.removeItem(siteRoleSessionKey);
+  sessionStorage.removeItem(authSessionKey);
+  sessionStorage.setItem(siteSessionVersionKey,siteSessionVersion);
+}
 let siteUnlocked=sessionStorage.getItem(siteSessionKey)==='1';
 let siteRole=sessionStorage.getItem(siteRoleSessionKey) || '';
+let authSession=null;
+try{authSession=JSON.parse(sessionStorage.getItem(authSessionKey) || 'null')}catch(error){authSession=null}
 let cloudLoadStarted=false;
+let loginLogLoadStarted=false;
 function setKnowledgeStatus(text){
   const status=document.querySelector('#knowledgeStatus');
   if(status) status.textContent=text;
 }
+function setLoginLogStatus(text){
+  const status=document.querySelector('#loginLogStatus');
+  if(status) status.textContent=text;
+}
 function supabaseHeaders(extra={}){
+  const token=authSession?.access_token || supabaseAnonKey;
   return {
     apikey:supabaseAnonKey,
-    Authorization:`Bearer ${supabaseAnonKey}`,
+    Authorization:`Bearer ${token}`,
     'Content-Type':'application/json',
     ...extra
   };
@@ -756,8 +782,33 @@ async function supabaseRequest(path, options={}){
   const text=await response.text();
   return text ? JSON.parse(text) : null;
 }
+async function supabaseAuthLogin(email, password){
+  const response=await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`,{
+    method:'POST',
+    headers:{
+      apikey:supabaseAnonKey,
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({email,password})
+  });
+  if(!response.ok){
+    throw new Error(await response.text() || 'login failed');
+  }
+  return response.json();
+}
+async function loadUserRole(userId){
+  const rows=await supabaseRequest(`profiles?select=role,email&id=eq.${encodeURIComponent(userId)}`);
+  return rows?.[0]?.role || 'viewer';
+}
 function canEditKnowledge(){
+  return siteUnlocked && (siteRole==='editor' || siteRole==='admin');
+}
+function canViewLoginLogs(){
   return siteUnlocked && siteRole==='admin';
+}
+function setLoginLogVisibility(){
+  const panel=document.querySelector('#loginLogPanel');
+  if(panel) panel.hidden=!canViewLoginLogs();
 }
 function setKnowledgeEditMode(){
   const editable=canEditKnowledge();
@@ -769,12 +820,15 @@ function setKnowledgeEditMode(){
     btn.disabled=!editable;
   });
   if(!siteUnlocked) setKnowledgeStatus('请先登录网页');
-  else if(editable) setKnowledgeStatus('管理员模式：可单独修改并保存知识点');
+  else if(siteRole==='admin') setKnowledgeStatus('真正管理员模式：可修改知识点，并可查看登录记录');
+  else if(editable) setKnowledgeStatus('知识点编辑账号：可单独修改并保存知识点');
   else setKnowledgeStatus('普通账号：只能查看，不能编辑保存');
+  setLoginLogVisibility();
 }
 function setCloudReadyStatus(prefix=''){
   if(canEditKnowledge()){
-    setKnowledgeStatus(prefix ? `${prefix}，管理员可编辑保存` : '管理员模式：可单独修改并保存知识点');
+    const label=siteRole==='admin' ? '真正管理员可编辑保存' : '知识点编辑账号可编辑保存';
+    setKnowledgeStatus(prefix ? `${prefix}，${label}` : label);
     return;
   }
   setKnowledgeStatus(prefix ? `${prefix}，普通账号只能查看` : '普通账号：只能查看，不能编辑保存');
@@ -792,6 +846,8 @@ async function setSiteAccess(unlocked, role=''){
   if(!unlocked){
     const user=document.querySelector('#siteUser');
     const password=document.querySelector('#sitePassword');
+    authSession=null;
+    sessionStorage.removeItem(authSessionKey);
     if(user) user.focus();
     if(password) password.value='';
     return;
@@ -799,6 +855,10 @@ async function setSiteAccess(unlocked, role=''){
   if(!cloudLoadStarted){
     cloudLoadStarted=true;
     await loadCloudKnowledge();
+  }
+  if(canViewLoginLogs() && !loginLogLoadStarted){
+    loginLogLoadStarted=true;
+    await loadLoginEvents();
   }
 }
 function requireKnowledgeEdit(){
@@ -847,6 +907,50 @@ async function upsertKnowledgeItems(items){
     headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
     body:JSON.stringify(items)
   });
+}
+function loginDeviceInfo(){
+  const ua=navigator.userAgent || 'unknown';
+  const platform=navigator.platform || 'unknown';
+  const language=navigator.language || 'unknown';
+  const screenSize=window.screen ? `${window.screen.width}x${window.screen.height}` : 'unknown';
+  return `${platform} / ${language} / ${screenSize} / ${ua}`;
+}
+async function getPublicIp(){
+  return '由后端记录';
+}
+async function recordLoginEvent(role){
+  const response=await fetch(`${supabaseUrl}/functions/v1/record-login`,{
+    method:'POST',
+    headers:supabaseHeaders(),
+    body:JSON.stringify({role,device:loginDeviceInfo()})
+  });
+  if(!response.ok) throw new Error(await response.text() || 'record login failed');
+}
+function renderLoginEvents(events){
+  const body=document.querySelector('#loginLogBody');
+  if(!body) return;
+  if(events.length===0){
+    body.innerHTML='<tr><td colspan="4">暂无记录</td></tr>';
+    return;
+  }
+  body.innerHTML=events.map(event=>{
+    const device=(event.device || event.user_agent || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const role=event.role==='admin' ? '真正管理员' : (event.role==='editor' ? '知识点编辑账号' : '普通账号');
+    const time=event.created_at ? new Date(event.created_at).toLocaleString('zh-CN') : '';
+    return `<tr><td>${time}</td><td>${role}</td><td>${event.ip || '未获取'}</td><td>${device}</td></tr>`;
+  }).join('');
+}
+async function loadLoginEvents(){
+  if(!canViewLoginLogs()) return;
+  setLoginLogStatus('正在读取登录记录...');
+  try{
+    const events=await supabaseRequest('login_events?select=created_at,role,email,ip,device,user_agent&order=created_at.desc&limit=30');
+    renderLoginEvents(events);
+    setLoginLogStatus(`已显示最近 ${events.length} 条登录记录`);
+  }catch(error){
+    console.error(error);
+    setLoginLogStatus('登录记录读取失败');
+  }
 }
 async function loadCloudKnowledge(options={}){
   if(!siteUnlocked) return;
@@ -1026,24 +1130,32 @@ async function saveAllKnowledge(){
 initKnowledgeEditor();
 setSiteAccess(siteUnlocked, siteRole);
 document.querySelector('#saveAllKnowledge').addEventListener('click',saveAllKnowledge);
-document.querySelector('#siteLoginButton').addEventListener('click',()=>{
+document.querySelector('#refreshLoginLogs')?.addEventListener('click',loadLoginEvents);
+document.querySelector('#siteLoginButton').addEventListener('click',async()=>{
   const user=document.querySelector('#siteUser');
   const password=document.querySelector('#sitePassword');
   const state=document.querySelector('#siteLoginState');
-  let role='';
-  if(user.value===adminAccount && password.value===adminPassword) role='admin';
-  if(user.value===viewerAccount && password.value===viewerPassword) role='viewer';
-  if(role){
+  if(state) state.textContent='正在登录...';
+  try{
+    const session=await supabaseAuthLogin(user.value.trim(), password.value);
+    authSession=session;
+    sessionStorage.setItem(authSessionKey,JSON.stringify(session));
+    const role=await loadUserRole(session.user.id);
     user.value='';
     password.value='';
     if(state) state.textContent='';
-    setSiteAccess(true, role);
+    await setSiteAccess(true, role);
+    recordLoginEvent(role).then(()=>{
+      if(canViewLoginLogs()) loadLoginEvents();
+    }).catch(error=>console.error(error));
     return;
+  }catch(error){
+    console.error(error);
+    await setSiteAccess(false);
+    if(state) state.textContent='账号或密码不正确，或账号未配置权限';
+    password.value='';
+    user.focus();
   }
-  setSiteAccess(false);
-  if(state) state.textContent='账号或密码不正确';
-  password.value='';
-  user.focus();
 });
 document.querySelector('#siteLogout').addEventListener('click',()=>{
   setSiteAccess(false);
