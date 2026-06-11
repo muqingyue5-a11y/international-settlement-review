@@ -132,8 +132,10 @@ th{background:#eef3f8;text-align:left}
 .editable-cell{background:#fffdfa;outline:none;min-width:280px}
 .editable-cell.locked{background:#f8fafc;color:#334155}
 .editable-cell:focus{box-shadow:inset 0 0 0 2px #f59e0b;background:#fff7ed}
-.save-cell{width:92px;text-align:center}
+.save-cell{width:150px;text-align:center}
 .save-one{border:1px solid #bbf7d0;background:#f0fdf4;color:#087443;border-radius:8px;padding:6px 9px;cursor:pointer}
+.delete-one{border:1px solid #fecaca;background:#fff1f2;color:#b42318;border-radius:8px;padding:6px 9px;cursor:pointer;margin-left:6px}
+.add-knowledge-row{border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:7px 10px;cursor:pointer;margin:6px 0 14px}
 .save-one:disabled,.searchbar button:disabled{cursor:not-allowed;opacity:.45}
 .save-one.saved{background:#dcfce7}
 .save-status{font-size:13px;color:var(--muted);align-self:center}
@@ -231,7 +233,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
     <section class="page" id="knowledge">
       <div class="hero"><h1>知识点总表</h1><p>以下按《国际结算复习（完整版）》逐条整理。每一条都直接列出要背的内容、答题口径和易错点。</p></div>
       <div class="searchbar"><input id="kSearch" placeholder="搜索知识点：账户行、无因性、追索、D/A、福费廷..." /><button id="saveAllKnowledge">保存全部</button><span class="save-status" id="knowledgeStatus">管理员可修改知识点，普通账号只能查看</span></div>
-      <div class="edit-tip">点击任意一行的“必须掌握的具体内容”即可修改；点该行“保存”只保存这一条。保存内容目前存放在当前浏览器本地。</div>
+      <div class="edit-tip">管理员可以直接修改“要求”“知识点”“必须掌握的具体内容”三栏；每行点“保存”只保存这一条，也可以用“新增知识点”和“删除”调整知识点行。</div>
       <div class="panel knowledge-list">
         <h2>绪论</h2>
         <table>
@@ -303,7 +305,7 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <tr><td>理解</td><td>信用证种类：卖方远期、买方远期</td><td>卖方远期信用证：出口商接受远期付款，融资便利偏向进口商，出口商承担等待收款或贴现成本。买方远期信用证：对出口商可即期收款，远期融资安排由进口商承担，进口商获得延期付款便利。考试重点是分清“谁即期收款、谁承担远期融资成本”。</td></tr>
         </table>
 
-        <h2>第八章、商业单据、融资业务</h2>
+        <h2>第八章 商业单据</h2>
         <table>
           <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
           <tr><td>理解</td><td>托收风险和防范</td><td>风险：进口商拒付、拒绝承兑、承兑后到期不付款；进口国市场价格下跌导致拒收；货物滞港、仓储和转售困难；进口国政治、外汇管制或法律风险。防范：调查进口商资信；选择 D/P 而慎用 D/A；控制货权单据；投保；明确合同违约责任；必要时采用信用证或预付款。</td></tr>
@@ -316,6 +318,11 @@ mark{background:#fff1a6;border-radius:3px;padding:0 2px}
           <tr><td>理解+记忆</td><td>海上货物运输保险保障范围、承保险别、主险中英文</td><td>保障范围包括自然灾害、意外事故、装卸转运损失、施救费用、共同海损分摊等。主险中英文：平安险 Free from Particular Average，FPA；水渍险 With Particular Average / With Average，WPA/WA；一切险 All Risks。理解：一切险范围最广，但不是所有风险都赔。</td></tr>
           <tr><td>了解</td><td>附属单据</td><td>装箱单 packing list：列包装和件数。重量单 weight memo/list：列重量。尺码单 measurement list：列体积。产地证 certificate of origin：证明原产地。检验证书 inspection certificate：证明品质、数量、卫生等。装船通知 shipping advice：通知买方装运信息。</td></tr>
           <tr><td>记忆</td><td>信用证审单方法：横审、纵审</td><td>横审：单据与单据之间互相核对，检查单单一致。纵审：每份单据与信用证条款核对，检查单证一致。考试答题可以写：先纵审单证，再横审单单，发现不符点及时处理。</td></tr>
+        </table>
+
+        <h2>第十一章 与贸易结算有关的融资业务</h2>
+        <table>
+          <tr><th>要求</th><th>知识点</th><th>必须掌握的具体内容</th></tr>
           <tr><td>理解</td><td>福费廷含义</td><td>福费廷是包买商或融资机构无追索权买断出口商持有的、经承兑或担保的远期债权或票据，使出口商提前取得现金并转移收款风险的一种贸易融资方式。关键词：无追索权、买断、远期债权/票据。</td></tr>
           <tr><td>记忆</td><td>福费廷与一般贴现比较</td><td>追索权：福费廷通常无追索权，一般贴现常有追索权。对象：福费廷多为国际贸易远期债权或票据，一般贴现多为票据。期限：福费廷期限较长，一般贴现期限较短。风险：福费廷风险更多转移给包买商。费用：福费廷费用通常较高。</td></tr>
           <tr><td>理解</td><td>福费廷流程</td><td>出口商与进口商签订远期付款合同；进口商开立或承兑远期票据并由银行担保；出口商装运交单取得远期债权或票据；出口商将票据无追索权卖给包买商；包买商扣除费用后向出口商付款；到期包买商向债务人或担保银行收款。</td></tr>
@@ -758,7 +765,7 @@ function setKnowledgeEditMode(){
     cell.contentEditable=editable?'true':'false';
     cell.classList.toggle('locked',!editable);
   });
-  document.querySelectorAll('.save-one,#saveAllKnowledge').forEach(btn=>{
+  document.querySelectorAll('.save-one,.delete-one,.add-knowledge-row,#saveAllKnowledge').forEach(btn=>{
     btn.disabled=!editable;
   });
   if(!siteUnlocked) setKnowledgeStatus('请先登录网页');
@@ -800,20 +807,36 @@ function requireKnowledgeEdit(){
   else setSiteAccess(false);
   return false;
 }
+function knowledgeChapter(row){
+  return row.closest('table')?.previousElementSibling?.textContent?.trim() || 'chapter';
+}
 function knowledgeKey(row, index){
-  const chapter=row.closest('table')?.previousElementSibling?.textContent?.trim() || 'chapter';
+  const chapter=knowledgeChapter(row);
   const cells=row.querySelectorAll('td');
   const topic=cells[1]?.textContent?.trim() || `row-${index}`;
   return knowledgeStorePrefix + chapter + ':' + topic;
 }
-function knowledgePayload(cell){
-  const row=cell.closest('tr');
+function readKnowledgeContent(raw){
+  try{
+    const data=JSON.parse(raw);
+    if(data && data.__knowledgeRowV2) return data;
+  }catch(error){}
+  return {__knowledgeRowV2:true, detail:raw || ''};
+}
+function knowledgePayload(row, deleted=false){
   const cells=row.querySelectorAll('td');
+  const data={
+    __knowledgeRowV2:true,
+    requirement:cells[0]?.innerHTML || '',
+    topic:cells[1]?.innerHTML || '',
+    detail:cells[2]?.innerHTML || '',
+    deleted
+  };
   return {
-    id:cell.dataset.key,
-    chapter:row.closest('table')?.previousElementSibling?.textContent?.trim() || 'chapter',
+    id:row.dataset.key,
+    chapter:knowledgeChapter(row),
     topic:cells[1]?.textContent?.trim() || '',
-    content:cell.innerHTML,
+    content:JSON.stringify(data),
     updated_at:new Date().toISOString(),
     updated_by:siteRole || 'web'
   };
@@ -829,36 +852,62 @@ async function loadCloudKnowledge(options={}){
   if(!siteUnlocked) return;
   if(!options.quiet) setKnowledgeStatus('正在读取云端知识点...');
   try{
-    const rows=await supabaseRequest('knowledge_items?select=id,content,updated_at');
-    const cells=[...document.querySelectorAll('.knowledge-list .editable-cell')];
+    const rows=await supabaseRequest('knowledge_items?select=id,chapter,topic,content,updated_at');
+    const knowledgeRows=[...document.querySelectorAll('.knowledge-list tr[data-edit-ready="1"]')];
     if(!rows || rows.length===0){
-      await upsertKnowledgeItems(cells.map(knowledgePayload));
+      await upsertKnowledgeItems(knowledgeRows.map(row=>knowledgePayload(row)));
       if(!options.quiet) setCloudReadyStatus('云端知识点已初始化');
       return;
     }
     const byId=new Map(rows.map(row=>[row.id,row]));
-    cells.forEach(cell=>{
-      const row=byId.get(cell.dataset.key);
-      if(row && cell.dataset.dirty!=='1') cell.innerHTML=row.content;
+    const byTopic=new Map(rows.map(row=>[row.topic,row]));
+    const usedIds=new Set();
+    knowledgeRows.forEach(row=>{
+      if(row.dataset.dirty==='1') return;
+      const cells=row.querySelectorAll('td');
+      const cloudRow=byId.get(row.dataset.key) || byTopic.get(cells[1]?.textContent?.trim());
+      if(!cloudRow) return;
+      usedIds.add(cloudRow.id);
+      row.dataset.key=cloudRow.id;
+      const data=readKnowledgeContent(cloudRow.content);
+      if(data.deleted){
+        row.remove();
+        return;
+      }
+      if(data.requirement!==undefined) cells[0].innerHTML=data.requirement;
+      if(data.topic!==undefined) cells[1].innerHTML=data.topic;
+      if(data.detail!==undefined) cells[2].innerHTML=data.detail;
     });
+    rows.forEach(cloudRow=>{
+      if(usedIds.has(cloudRow.id)) return;
+      const data=readKnowledgeContent(cloudRow.content);
+      if(data.deleted || !data.topic) return;
+      const table=[...document.querySelectorAll('.knowledge-list table')].find(item=>knowledgeChapterFromTable(item)===cloudRow.chapter);
+      if(!table) return;
+      const row=createKnowledgeRow(data.requirement || '', data.topic || cloudRow.topic || '', data.detail || '');
+      row.dataset.key=cloudRow.id;
+      table.appendChild(row);
+      prepareKnowledgeRow(row);
+    });
+    setKnowledgeEditMode();
     if(!options.quiet) setCloudReadyStatus('已读取云端最新知识点');
   }catch(error){
     console.error(error);
     if(!options.quiet) setKnowledgeStatus('云端读取失败，请检查网络后刷新');
   }
 }
-async function saveKnowledgeCell(cell, saveBtn){
+async function saveKnowledgeRow(row, saveBtn){
   if(!requireKnowledgeEdit()) return;
   saveBtn.disabled=true;
   saveBtn.textContent='保存中';
   setKnowledgeStatus('正在保存到云端...');
   try{
-    localStorage.setItem(cell.dataset.key, cell.innerHTML);
-    await upsertKnowledgeItems([knowledgePayload(cell)]);
-    cell.dataset.dirty='0';
+    localStorage.setItem(row.dataset.key, JSON.stringify(knowledgePayload(row)));
+    await upsertKnowledgeItems([knowledgePayload(row)]);
+    row.dataset.dirty='0';
     saveBtn.classList.add('saved');
     saveBtn.textContent='已保存';
-    setKnowledgeStatus(`已保存到云端：${cell.closest('tr').querySelectorAll('td')[1].textContent.trim()}`);
+    setKnowledgeStatus(`已保存到云端：${row.querySelectorAll('td')[1].textContent.trim()}`);
     setTimeout(()=>{saveBtn.classList.remove('saved');saveBtn.textContent='保存';saveBtn.disabled=false;},1200);
   }catch(error){
     console.error(error);
@@ -867,61 +916,104 @@ async function saveKnowledgeCell(cell, saveBtn){
     setKnowledgeStatus('云端保存失败，请重试');
   }
 }
+function knowledgeChapterFromTable(table){
+  return table?.previousElementSibling?.textContent?.trim() || 'chapter';
+}
+function createKnowledgeRow(requirement='新增', topic='新知识点', detail='在这里填写具体内容'){
+  const row=document.createElement('tr');
+  row.innerHTML=`<td>${requirement}</td><td>${topic}</td><td>${detail}</td>`;
+  row.dataset.key=knowledgeStorePrefix+'custom:'+Date.now()+':'+Math.random().toString(16).slice(2);
+  return row;
+}
+function markKnowledgeDirty(row, saveBtn){
+  if(!canEditKnowledge()) return;
+  row.dataset.dirty='1';
+  saveBtn.textContent='保存';
+  saveBtn.classList.remove('saved');
+  setKnowledgeStatus('有未保存修改');
+}
+function prepareKnowledgeRow(row){
+  if(row.querySelector('th') || row.dataset.editReady) return;
+  const cells=row.querySelectorAll('td');
+  if(cells.length<3) return;
+  if(!row.dataset.key) row.dataset.key=knowledgeKey(row,[...document.querySelectorAll('.knowledge-list tr')].indexOf(row));
+  [cells[0],cells[1],cells[2]].forEach(cell=>{
+    cell.classList.add('editable-cell');
+    cell.contentEditable='false';
+  });
+  const saveTd=document.createElement('td');
+  saveTd.className='save-cell';
+  const saveBtn=document.createElement('button');
+  saveBtn.type='button';
+  saveBtn.className='save-one';
+  saveBtn.textContent='保存';
+  saveBtn.addEventListener('click',()=>saveKnowledgeRow(row, saveBtn));
+  const deleteBtn=document.createElement('button');
+  deleteBtn.type='button';
+  deleteBtn.className='delete-one';
+  deleteBtn.textContent='删除';
+  deleteBtn.addEventListener('click',async()=>{
+    if(!requireKnowledgeEdit()) return;
+    deleteBtn.disabled=true;
+    try{
+      await upsertKnowledgeItems([knowledgePayload(row,true)]);
+      row.remove();
+      setKnowledgeStatus('已删除该知识点');
+    }catch(error){
+      console.error(error);
+      deleteBtn.disabled=false;
+      setKnowledgeStatus('删除失败，请重试');
+    }
+  });
+  [cells[0],cells[1],cells[2]].forEach(cell=>{
+    cell.addEventListener('input',()=>markKnowledgeDirty(row, saveBtn));
+  });
+  saveTd.append(saveBtn, deleteBtn);
+  row.appendChild(saveTd);
+  row.dataset.editReady='1';
+}
 function initKnowledgeEditor(){
   document.querySelectorAll('.knowledge-list table').forEach(table=>{
     const header=table.querySelector('tr');
     if(header && !header.querySelector('.save-head')){
       const th=document.createElement('th');
       th.className='save-head';
-      th.textContent='保存';
+      th.textContent='操作';
       header.appendChild(th);
+    }
+    if(!table.nextElementSibling?.classList?.contains('add-knowledge-row')){
+      const addBtn=document.createElement('button');
+      addBtn.type='button';
+      addBtn.className='add-knowledge-row';
+      addBtn.textContent='新增知识点';
+      addBtn.addEventListener('click',()=>{
+        if(!requireKnowledgeEdit()) return;
+        const row=createKnowledgeRow();
+        table.appendChild(row);
+        prepareKnowledgeRow(row);
+        setKnowledgeEditMode();
+        row.querySelector('td')?.focus();
+        setKnowledgeStatus('已新增一条知识点，请填写后保存');
+      });
+      table.insertAdjacentElement('afterend',addBtn);
     }
   });
   document.querySelectorAll('.knowledge-list tr').forEach((row,index)=>{
-    if(row.querySelector('th')) return;
-    const cells=row.querySelectorAll('td');
-    if(cells.length<3 || row.dataset.editReady) return;
-    const key=knowledgeKey(row,index);
-    const editable=cells[2];
-    editable.classList.add('editable-cell');
-    editable.contentEditable='false';
-    editable.dataset.key=key;
-    editable.dataset.defaultHtml=editable.innerHTML;
-    const saved=localStorage.getItem(key);
-    if(saved!==null) editable.innerHTML=saved;
-    const saveTd=document.createElement('td');
-    saveTd.className='save-cell';
-    const saveBtn=document.createElement('button');
-    saveBtn.type='button';
-    saveBtn.className='save-one';
-    saveBtn.textContent='保存';
-    saveBtn.addEventListener('click',()=>{
-      saveKnowledgeCell(editable, saveBtn);
-    });
-    editable.addEventListener('input',()=>{
-      if(!canEditKnowledge()) return;
-      editable.dataset.dirty='1';
-      saveBtn.textContent='保存';
-      saveBtn.classList.remove('saved');
-      setKnowledgeStatus('有未保存修改');
-    });
-    saveTd.appendChild(saveBtn);
-    row.appendChild(saveTd);
-    row.dataset.editReady='1';
+    prepareKnowledgeRow(row);
   });
   setKnowledgeEditMode();
 }
 async function saveAllKnowledge(){
   if(!requireKnowledgeEdit()) return;
   const button=document.querySelector('#saveAllKnowledge');
-  const cells=[...document.querySelectorAll('.knowledge-list .editable-cell')];
+  const rows=[...document.querySelectorAll('.knowledge-list tr[data-edit-ready="1"]')];
   button.disabled=true;
   button.textContent='保存中';
   setKnowledgeStatus('正在保存全部知识点到云端...');
   try{
-    cells.forEach(cell=>localStorage.setItem(cell.dataset.key, cell.innerHTML));
-    await upsertKnowledgeItems(cells.map(knowledgePayload));
-    cells.forEach(cell=>cell.dataset.dirty='0');
+    rows.forEach(row=>localStorage.setItem(row.dataset.key, JSON.stringify(knowledgePayload(row))));
+    await upsertKnowledgeItems(rows.map(row=>knowledgePayload(row)));
+    rows.forEach(row=>row.dataset.dirty='0');
     setKnowledgeStatus('全部知识点已保存到云端');
   }catch(error){
     console.error(error);
